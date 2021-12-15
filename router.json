@@ -1,8 +1,280 @@
 {
 	"api":{
+		"DELETE": {
+			"/account/:username": {
+				"filename": "delete_account.js",
+				"login": true,
+				"description": "Supprimer le compte",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/users/:user_id": {
+				"filename": "admin_delete_account.js",
+				"login": true,
+				"admin": true,
+				"description": "",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/backups/:backup_filename": {
+				"filename": "admin_delete_backup.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer une sauvegarde BDD",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/logs": {
+				"filename": "admin_clear_logs.js",
+				"login": true,
+				"admin": true,
+				"description": "Nettoyer les logs",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			}
+		},
+		"PUT": {
+			"/admin/backups": {
+				"filename": "admin_create_backup.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer une sauvegarde de la BDD courante",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			}
+		},
+		"POST": {
+			"/account/logout": {
+				"filename": "logout.js",
+				"login": false,
+				"description": "Se déconnecter",
+				"return": {
+					"success": "String",
+					"error": "String"
+				}
+			},
+			"/account/login": {
+				"filename": "login.js",
+				"login": false,
+				"description": "Se connecter",
+				"params": ["email", "password"],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/account/register": {
+				"filename": "register.js",
+				"login": false,
+				"description": "Créer un compte",
+				"params": ["email", "password"],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/account/activate/:id": {
+				"filename": "activate_account.js",
+				"login": false,
+				"description": "Activer un compte",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/account/reset/:id": {
+				"filename": "reset_account.js",
+				"login": false,
+				"description": "Confirmer la réinitialisation d'un compte",
+				"params": ["new_password"],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/account/reset": {
+				"filename": "ask_reset_account.js",
+				"login": false,
+				"description": "Demander la réinitialisation d'un compte",
+				"params": ["email"],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/users/:user_id/block": {
+				"filename": "admin_block_user.js",
+				"login": true,
+				"admin": true,
+				"description": "",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/users/:user_id/unblock": {
+				"filename": "admin_unblock_user.js",
+				"login": true,
+				"admin": true,
+				"description": "",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/users/:user_id/activate": {
+				"filename": "admin_activate_user.js",
+				"login": true,
+				"admin": true,
+				"description": "",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/users/:user_id/deactivate": {
+				"filename": "admin_deactivate_user.js",
+				"login": true,
+				"admin": true,
+				"description": "",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/account/notifications/:notif_id": {
+				"filename": "notifications_mark_seen.js",
+				"login": true,
+				"description": "Marquer la notification souhaitée lue",
+				"return": {
+					"success": "String",
+					"error": "String"
+				}
+			},
+			"/admin/users/:user_id/email": {
+				"filename": "admin_change_email.js",
+				"login": true,
+				"admin": true,
+				"description": "",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/account": {
+				"filename": "edit_profile.js",
+				"login": true,
+				"description": "Modifier un champ du profil utilisateur connecté",
+				"params":["username", "email", "current_password", "new_password", "new_password_confirm"],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/backups/:backup_filename": {
+				"filename": "admin_restore_backup.js",
+				"login": true,
+				"admin": true,
+				"description": "Restaurer une sauvegarde BDD",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/backups": {
+				"filename": "update_database.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour la base de données",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			}
+		},
 		"GET": {
-			"path": {
-
+			"/account/download.json": {
+				"filename": "download_account.js",
+				"login": true,
+				"description": "Télécharger les informations de l'utilisateur",
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/account/notifications": {
+				"filename": "notifications.js",
+				"login": true,
+				"description": "Toutes les notifications de l'utilisateur connecté",
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				},
+				"scope": ["profile.notifications"]
+			},
+			"/admin/users": {
+				"filename": "admin_get_users.js",
+				"login": true,
+				"admin": true,
+				"description": "",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/admin/backups/:filename/download": {
+				"filename": "admin_download_backup.js",
+				"login": true,
+				"admin": true,
+				"description": "",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/account": {
+				"filename": "profile.js",
+				"login": true,
+				"description": "Les informations de profil de l'utilisateur connecté",
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				},
+				"scope": ["profile.public", "profile.private"]
+			},
+			"/ping": {
+				"filename": "ping.js",
+				"login": false,
+				"description": "L'état du serveur ainsi que votre statut d'authentification",
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
 			}
 		}
 	}

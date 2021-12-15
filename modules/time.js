@@ -29,9 +29,14 @@ function getParisTime(){
   return convertTZ(new Date(), 'Europe/Paris')
 }
 
+function toFRDatetimeString(date){
+   return new Intl.DateTimeFormat('fr-FR',{day: "numeric", month:'long', year: "numeric"}).format(date) + " à " + new Intl.DateTimeFormat('fr-FR',{hour12: false, hour: "numeric", minute: "numeric", second: "numeric"}).format(date)
+}
+
 module.exports = {
   getDbString,
   msToTime,
   convertTZ,
-  getParisTime
+  getParisTime,
+  toFRDatetimeString
 }

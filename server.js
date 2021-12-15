@@ -60,14 +60,9 @@ setInterval(function(){
     loggerRequest = {}
 }, 1000)
 
-const { retrieveDiscordUser } = require('./modules/discord');
-const { retrieveTwitterUser } = require('./modules/twitter');
-const { retrieveFacebookUser } = require('./modules/facebook');
-const { getPromotions } = require('./modules/promotions');
 const { getLastPatchnote } = require('./modules/patchnotes');
 const { patch } = require('request');
 const request = require('request');
-const { getNextScheduledMaintenance } = require('./modules/git');
 const logger = require('./modules/logger');
 const { getUserInfo } = require('./modules/users');
 const {msToTime} = require("./modules/time");
@@ -473,15 +468,6 @@ function render_page(view, req, res, use_framework = true, replaceValues = {}, c
                                     }, 5000)
                                     
                                     // params['slowResponse'] = (new Date().getTime() - req.startedAt.getTime() > 5*1000)
-                                    getNextScheduledMaintenance((maintenance) => {
-                                        params["maintenance"] = maintenance
-                                        framework = ejs.render(framework, params)
-                                        if(callback != undefined){
-                                            callback(framework)
-                                        } else {
-                                            res.send(framework)
-                                        }
-                                    })
                                 } catch (error) {
                                     res.status(500)
                                     render_page({

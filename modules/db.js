@@ -1,8 +1,7 @@
-
 /**
  * Shows how to use chaining rather than the `serialize` method.
  */
- "use strict";
+"use strict";
 
 const fs = require('fs');
 if(!fs.existsSync(".data")){
@@ -11,8 +10,8 @@ if(!fs.existsSync(".data")){
 
 const sqlite3 = require('sqlite3');
 var database = new sqlite3.Database('.data/database.sqlite3')
-const { toFRDatetimeString } = require('./eventChangesNotif');
 const logger = require('./logger');
+const {toFRDatetimeString} = require("./time");
 
 function cleanBackups(){
     module.exports.getBackups((backups) => {

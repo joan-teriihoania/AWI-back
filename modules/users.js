@@ -1,6 +1,4 @@
 const db = require("./db")
-const { retrieveDiscordUser } = require("./discord")
-const { retrieveTwitterUser } = require("./twitter")
 const request = require('request')
 const { sendMail } = require("./mail")
 const fs = require('fs')
@@ -189,25 +187,6 @@ function getUserInfo(user_id, partial = false){
                         }
                         resolve()
                     })
-                }))
-                
-                p.push(new Promise((resolve) => {
-                    retrieveDiscordUser(userObject.user_id).then((data) => {
-                        userObject.discord = data
-                        resolve()
-                    }).catch(() => {
-                        resolve()
-                    })
-                }))
-
-                
-                p.push(new Promise((resolve) => {
-                    retrieveTwitterUser(userObject.user_id).then((data) => {
-                        userObject.twitter = data
-                        resolve()
-                    }).catch(() => {
-                        resolve()
-                    })  
                 }))
 
                 Promise.all(p).then(() => {
