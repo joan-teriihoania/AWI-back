@@ -10,7 +10,11 @@
             "name": "user_id",
             "type": "INTEGER",
             "primary": false,
-            "not_null": true
+            "not_null": true,
+            "foreign": {
+                "table": "users",
+                "attribute": "user_id"
+            }
         },
         {
             "name": "type",
@@ -78,7 +82,11 @@
             "name": "user_id",
             "type": "INTEGER",
             "primary": false,
-            "not_null": true
+            "not_null": true,
+            "foreign": {
+                "table": "users",
+                "attribute": "user_id"
+            }
         },
         {
             "name": "created_at",
@@ -89,488 +97,6 @@
         {
             "name": "activated",
             "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "messages": [
-        {
-            "name": "message_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": false
-        },
-        {
-            "name": "sender_user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "recipient_user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "content",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "sent_at",
-            "type": "DATETIME DEFAULT CURRENT_TIMESTAMP",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "seen",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        }
-    ],
-    "notes": [
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "content",
-            "type": "TEXT DEFAULT ''",
-            "primary": false,
-            "not_null": false
-        }
-    ],
-    "applications": [
-        {
-            "name": "application_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": false
-        },
-        {
-            "name": "name",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "img_profile",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "secret_key",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "callback_url",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "verified",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        }
-    ],
-    "event_change_requests": [
-        {
-            "name": "event_change_request_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": false
-        },
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "moveTo",
-            "type": "DATETIME",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "status",
-            "type": "TEXT DEFAULT 'voting'",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "createdAt",
-            "type": "DATETIME DEFAULT CURRENT_TIMESTAMP",
-            "primary": false,
-            "not_null": false
-        }
-    ],
-    "event_change_request_votes": [
-        {
-            "name": "event_change_request_vote_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": false
-        },
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "event_change_request_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "votedAt",
-            "type": "DATETIME DEFAULT CURRENT_TIMESTAMP",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "approve",
-            "type": "BOOLEAN",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "events":[
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": false
-        },
-        {
-            "name": "uid",
-            "type": "TEXT UNIQUE",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "name",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "color",
-            "type": "TEXT DEFAULT '#4e73df'",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "description",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "startsAt",
-            "type": "DATETIME",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "endsAt",
-            "type": "DATETIME",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "deleted",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "deletedConfirmCounter",
-            "type": "INTEGER DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        }
-    ],
-    "event_comments": [
-        {
-            "name": "event_comment_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": true
-        },
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "content",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "created_at",
-            "type": "DATETIME DEFAULT CURRENT_TIMESTAMP",
-            "primary": false,
-            "not_null": false
-        }
-    ],
-    "event_changes": [
-        {
-            "name": "event_changes_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": true
-        },
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "JSON",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "created_at",
-            "type": "DATETIME DEFAULT CURRENT_TIMESTAMP",
-            "primary": false,
-            "not_null": false
-        }
-    ],
-    "event_creators": [
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "event_rooms": [
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "room_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "event_groups": [
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "group_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "rooms": [
-        {
-            "name": "room_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": true
-        },
-        {
-            "name": "name",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "groups": [
-        {
-            "name": "group_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": true
-        },
-        {
-            "name": "name",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "user_groups": [
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "group_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "user_groups_whitelist_filter": [
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "group_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "user_groups_blacklist_filter": [
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "group_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "user_events": [
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "event_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        }
-    ],
-    "scheduled_maintenance": [
-        {
-            "name": "scheduled_maintenance_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": false
-        },
-        {
-            "name": "incident_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "title",
-            "type": "TEXT",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "startsAt",
-            "type": "DATETIME",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "ongoing",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "completed",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        }
-    ],
-    "whoisthisteacher_scoreboard": [
-        {
-            "name": "whoisthisteacher_scoreboard_id",
-            "type": "INTEGER",
-            "primary": true,
-            "not_null": false
-        },
-        {
-            "name": "user_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "nbTeachers",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "durationInMs",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
-            "name": "score",
-            "type": "INTEGER",
             "primary": false,
             "not_null": true
         }
@@ -607,118 +133,10 @@
             "not_null": false
         },
         {
-            "name": "ical",
-            "type": "TEXT DEFAULT ''",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "discord_token",
-            "type": "TEXT UNIQUE",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "messenger_token",
-            "type": "TEXT UNIQUE",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "twitter_token",
-            "type": "TEXT UNIQUE",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "messenger_notif",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "discord_notif",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "twitter_notif",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "email_notif",
-            "type": "BOOLEAN DEFAULT 1",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "created_by_script",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
             "name": "auth_key",
             "type": "TEXT UNIQUE",
             "primary": false,
             "not_null": true
-        },
-        {
-            "name": "make_planning_public",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "enable_public_profile",
-            "type": "BOOLEAN DEFAULT 1",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "limit_public_profile",
-            "type": "INTEGER DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "mask_email",
-            "type": "INTEGER DEFAULT 1",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "mask_profile_pic",
-            "type": "INTEGER DEFAULT 1",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "notif_change_on_n_days",
-            "type": "INTEGER DEFAULT 7",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "enable_filter_events_whitelist",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "filter_events_keywords_whitelist",
-            "type": "TEXT DEFAULT ''",
-            "primary": false,
-            "not_null": false
-        },
-        {
-            "name": "enable_filter_events_blacklist",
-            "type": "BOOLEAN DEFAULT 0",
-            "primary": false,
-            "not_null": false
         },
         {
             "name": "blocked",
@@ -731,18 +149,308 @@
             "type": "TEXT DEFAULT ''",
             "primary": false,
             "not_null": false
+        }
+    ],
+    "technical_sheets": [
+        {
+            "name": "technical_sheet_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
         },
         {
-            "name": "filter_events_keywords_blacklist",
-            "type": "TEXT DEFAULT ''",
+            "name": "recipe_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true,
+            "foreign": {
+                "table": "recipes",
+                "attribute": "recipe_id"
+            }
+        },
+        {
+            "name": "cout_assaisonnement",
+            "type": "REAL DEFAULT 0",
             "primary": false,
             "not_null": false
         },
         {
-            "name": "last_viewed_patchnote",
-            "type": "TEXT DEFAULT ''",
+            "name": "cout_personnel",
+            "type": "REAL DEFAULT 0",
             "primary": false,
             "not_null": false
+        },
+        {
+            "name": "cout_fluide",
+            "type": "REAL DEFAULT 0",
+            "primary": false,
+            "not_null": false
+        },
+        {
+            "name": "coef_marge",
+            "type": "REAL DEFAULT 0",
+            "primary": false,
+            "not_null": false
+        }
+    ],
+    "recipes": [
+        {
+            "name": "recipe_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "name",
+            "type": "TEXT",
+            "primary": false,
+            "not_null": true
+        },
+        {
+            "name": "nb_couvert",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true
+        },
+        {
+            "name": "user_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true,
+            "foreign": {
+                "table": "users",
+                "attribute": "user_id"
+            }
+        },
+        {
+            "name": "recipe_category_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true,
+            "foreign": {
+                "table": "recipe_categories",
+                "attribute": "recipe_category_id"
+            }
+        }
+    ],
+    "recipe_categories": [
+        {
+            "name": "recipe_category_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "name",
+            "type": "TEXT",
+            "primary": false,
+            "not_null": true
+        }
+    ],
+    "recipe_steps": [
+        {
+            "name": "recipe_step_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "recipe_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true,
+            "foreign": {
+                "table": "recipes",
+                "attribute": "recipe_id"
+            }
+        },
+        {
+            "name": "position",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true
+        },
+        {
+            "name": "name",
+            "type": "TEXT",
+            "primary": false,
+            "not_null": true
+        },
+        {
+            "name": "description",
+            "type": "TEXT",
+            "primary": false,
+            "not_null": true
+        },
+        {
+            "name": "quantity",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true
+        },
+        {
+            "name": "duration",
+            "type": "REAL",
+            "primary": false,
+            "not_null": true
+        }
+    ],
+    "recipe_step_components": [
+        {
+            "name": "recipe_step_component_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "recipe_step_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true,
+            "foreign": {
+                "table": "recipe_steps",
+                "attribute": "recipe_step_id"
+            }
+        },
+        {
+            "name": "sub_recipe_step_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": false,
+            "foreign": {
+                "table": "recipe_steps",
+                "attribute": "recipe_step_id"
+            }
+        },
+        {
+            "name": "sub_recipe_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": false,
+            "foreign": {
+                "table": "recipes",
+                "attribute": "recipe_id"
+            }
+        },
+        {
+            "name": "sub_ingredient_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": false,
+            "foreign": {
+                "table": "ingredients",
+                "attribute": "ingredient_id"
+            }
+        },
+        {
+            "name": "quantity",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true
+        }
+    ],
+    "ingredients": [
+        {
+            "name": "ingredient_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "unit_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true,
+            "foreign": {
+                "table": "units",
+                "attribute": "unit_id"
+            }
+        },
+        {
+            "name": "ingredient_category_id",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true,
+            "foreign": {
+                "table": "ingredient_categories",
+                "attribute": "ingredient_category_id"
+            }
+        },
+        {
+            "name": "name",
+            "type": "TEXT",
+            "primary": false,
+            "not_null": true
+        },
+        {
+            "name": "price",
+            "type": "REAL",
+            "primary": false,
+            "not_null": true
+        }
+    ],
+    "units": [
+        {
+            "name": "unit_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "name",
+            "type": "TEXT",
+            "primary": false,
+            "not_null": true
+        }
+    ],
+    "ingredient_categories": [
+        {
+            "name": "ingredient_category_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "name",
+            "type": "TEXT",
+            "primary": false,
+            "not_null": true
+        }
+    ],
+    "allergenes": [
+        {
+            "name": "allergene_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "name",
+            "type": "TEXT",
+            "primary": false,
+            "not_null": true
+        }
+    ],
+    "ingredient_allergenes": [
+        {
+            "name": "ingredient_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false,
+            "foreign": {
+                "table": "ingredients",
+                "attribute": "ingredient_id"
+            }
+        },
+        {
+            "name": "allergene_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false,
+            "foreign": {
+                "table": "allergenes",
+                "attribute": "allergene_id"
+            }
         }
     ]
 }

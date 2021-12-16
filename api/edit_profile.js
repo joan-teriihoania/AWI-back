@@ -4,9 +4,7 @@ const db = require('../modules/db')
 const bcrypt = require('bcrypt')
 const { generateAuthKey } = require('../server');
 const { sendMail } = require('../modules/mail');
-const { assign_groups, load_ical, refreshIcalStatus, getUserIcalStatus, synchronizeUserEvents } = require('../modules/load_icals');
 const { uncacheUser, checkPassword } = require('../modules/users');
-const { getEventsCreatedBy, uncacheEvent } = require('../modules/events');
 
 function endsWithAny(suffixes, string) {
     return suffixes.some(function (suffix) {
@@ -73,7 +71,7 @@ module.exports = {
         }
 
         var form = new formidable.IncomingForm();
-        var uneditableFields = ["blocked", "password", "current_password", "new_password_confirm", "user_id", "auth_key"]
+        var uneditableFields = ["blockedReason", "blocked", "password", "current_password", "new_password_confirm", "user_id", "auth_key"]
         var fieldRequire = {
             "username": {
                 "regex": /[`!@$%^&*()+\=\[\]{};':"\\|,<>\/?~]/,
@@ -97,7 +95,7 @@ module.exports = {
             for(var field in fields){
                 if(!(uneditableFields.includes(field))){
                     if(fieldRequire[field]){
-                        if(!fieldRequire[field]['nullable'] && (fields[field].replace(/ /gi, "") == "" || fields[field] == undefined)){
+                        if(!fieldRequire[field]['nullable'] && (fields[field].replace(/ /gi, "") === "" || fields[field] === undefined)){
                             errors.push("Le champ '"+field+"' doit être obligatoirement remplis")
                             break
                         }
@@ -118,42 +116,7 @@ module.exports = {
                         }
                     }
 
-                    if(field == "username" && fields[field] != res.user.username){
-                        if(res.user.created_by_script){
-                            errors.push("Votre nom d'utilisateur a été verrouillé par le système.")
-                            break
-                        }
-                    }
-                    
-                    if (field == "email" && res.user.created_by_script){
-                        if(!fields[field].includes('@')){
-                            errors.push("Vous devez mettre à jour votre adresse mail avec une adresse valide avant de pouvoir modifier vos paramètres.")
-                            break
-                        }
-
-                        if(res.user.email.includes('@') && fields[field] != res.user.email) {
-                            errors.push("Votre adresse électronique a été verrouillée par le système.")
-                            break
-                        }
-                    }
-
-                    if(field == "ical"){
-                        if(fields[field] != "" && !fields[field].startsWith("https://proseconsult.umontpellier.fr/jsp/custom/modules/plannings/direct_cal.jsp?data=")){
-                            errors.push("Votre lien iCal n'a pas été reconnu ou est invalide")
-                            break
-                        }
-                        updatePromises.push(new Promise(async (resolve, reject) => {
-                            if(fields["ical"] != res.user.ical){
-                                await db.run("UPDATE users SET ical = ? WHERE user_id = " + res.user.user_id, [fields["ical"]])
-                                await refreshIcalStatus()
-                                await synchronizeUserEvents(res.user.user_id)
-                            }
-                            resolve()
-                        }))
-                        continue
-                    }
-
-                    if(field == "email"){
+                    if(field === "email"){
                         updatePromises.push(new Promise((resolve, reject) => {
                             db.run("UPDATE users SET email = ? WHERE user_id = " + res.user.user_id, [fields["email"]]).then(() => {
                                 if(res.user.email != fields["email"]){
@@ -238,12 +201,6 @@ module.exports = {
                                 resolve()
                             }
                         }))
-                        continue
-                    }
-
-                    if((field == "discord_token" || field == "messenger_token" || field == "twitter_token") && fields[field] == ""){
-                        updatePromises.push(db.run("UPDATE users SET "+field+" = null WHERE user_id = " + res.user.user_id))
-                        response[field] = fields[field]    
                         continue
                     }
                     

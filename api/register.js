@@ -13,11 +13,11 @@ function endsWithAny(suffixes, string) {
 
 module.exports = {
     exec: function(req, res){
-        var username = req.query.username
-        var email = req.query.email
-        var password = req.query.password
+        var username = req.body.username
+        var email = req.body.email
+        var password = req.body.password
 
-        if(username != undefined && email != undefined && password != undefined){
+        if(username !== undefined && email !== undefined && password !== undefined){
             username = decodeURIComponent(username)
             password = decodeURIComponent(password)
             email = decodeURIComponent(email)
@@ -34,7 +34,9 @@ module.exports = {
                         "username": username,
                         "email": email,
                         "password": bcrypt.hashSync(password, 10),
-                        "auth_key": generateAuthKey(128)
+                        "auth_key": generateAuthKey(128),
+                        "blocked": 1,
+                        "blockedReason": "Votre compte doit être validé par un administrateur"
                     }
                 ]).then((userId) => {
                     db.insert("action_links", [
@@ -49,11 +51,39 @@ module.exports = {
                                 if(new_user && new_user.length > 0 && activationLink && activationLink.length > 0){
                                     sendMail(
                                         new_user[0].email,
-                                        "Activation de votre compte Polygenda",
-                                        fs.readFileSync('./api/register/email_activation_link.html', {encoding: 'utf-8'})
-                                        .replace(/{{ username }}/gi, new_user[0].username)
-                                        .replace(/{{ website }}/gi, process.env.BASE_URL)
-                                        .replace(/{{ action_link }}/gi, process.env.BASE_URL + "/account/login?al=" + activationLink[0].link)
+                                        "Activation de votre compte",
+                                        {
+                                            header: {
+                                                title: "Inscription",
+                                                subtitle: "Activation de votre compte"
+                                            },
+                                            main:{
+                                                components:[
+                                                    {
+                                                        type: "text",
+                                                        content: [
+                                                            {
+                                                                type: "title",
+                                                                lines: [
+                                                                    "Bonjour "+new_user[0].username+","
+                                                                ]
+                                                            },
+                                                            {
+                                                                type: "text",
+                                                                lines: [
+                                                                    "Il ne vous reste plus qu'une seule chose à faire pour finaliser votre inscription à <b>"+process.env.APP_NAME+"</b> ! Pour cela, vous devez activer votre compte et confirmer votre adresse mail en cliquant sur le lien ci-dessous."
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        type: "button",
+                                                        text: "Activer mon compte",
+                                                        link: process.env.BASE_URL + "/account/login?al=" + activationLink[0].link
+                                                    }
+                                                ]
+                                            }
+                                        }
                                     ).then((info) => {
                                         res.status(200)
                                         res.send({

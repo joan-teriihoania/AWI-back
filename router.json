@@ -59,15 +59,6 @@
 			}
 		},
 		"POST": {
-			"/account/logout": {
-				"filename": "logout.js",
-				"login": false,
-				"description": "Se déconnecter",
-				"return": {
-					"success": "String",
-					"error": "String"
-				}
-			},
 			"/account/login": {
 				"filename": "login.js",
 				"login": false,

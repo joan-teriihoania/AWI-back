@@ -96,23 +96,34 @@ function isNumber(num){
          }]
      
          var rowsString = []
+         var primaryKeys = []
+         var foreignKeys = []
          for (var row of rows) {
              var rowString = row.name
              rowString += " " + row.type
+             if(row.not_null){
+                 rowString += " NOT NULL"
+             }
              if(row.primary){
-                 rowString += " PRIMARY KEY"
-             } else {
-                 if(row.not_null){
-                     rowString += " NOT NULL"
-                 }
+                 primaryKeys.push(row.name)
+             }
+             if(row.foreign){
+                 foreignKeys.push("FOREIGN KEY("+row.name+") REFERENCES " + row.foreign.table + "("+row.foreign.attribute+")")
              }
              rowsString.push(rowString)
          }
          
          return new Promise((resolve, reject) => {
-             database.run("CREATE TABLE IF NOT EXISTS " + tablename + "(" + rowsString.join(", ") + ")", function(err){
+             database.run(
+                 "CREATE TABLE IF NOT EXISTS " +
+                 tablename +
+                 "(" + rowsString.join(", ") +
+                 (primaryKeys.length > 0 ? ", " + "PRIMARY KEY ("+primaryKeys.join(', ')+")" : "") +
+                 (foreignKeys.length > 0 ? ", " + foreignKeys.join(", ") : "") +
+                 ")",
+             function(err){
                  if(err){
-                     if(err.code == 'SQLITE_IOERR' || err.code == 'SQLITE_BUSY'){
+                     if(err.code === 'SQLITE_IOERR' || err.code === 'SQLITE_BUSY'){
                      setTimeout(() => {
                          // logger.log("[DB-CONFIG] WARN(createTable): Database access file error catched")
                          module.exports.createTable(tablename, rows).then(() => {

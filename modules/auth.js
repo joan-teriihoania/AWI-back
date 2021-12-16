@@ -1,43 +1,26 @@
 const db = require('./db')
-const googleutils = require('./googleutils')
-const DiscordOauth2 = require("discord-oauth2");
-const oauth = new DiscordOauth2();
+const {decrypt} = require("./crypto");
 
 module.exports = {
-    is_auth: function(user, req, callback){
-        if(req.query.auth_key){
-            db.select('SELECT * FROM users u JOIN action_links al ON u.user_id == al.user_id WHERE u.auth_key = ? AND al.type = \'email\' AND al.activated = 1 AND u.blocked = 0', [req.query.auth_key], function(rows){
-                if(rows && rows.length > 0){
-                    callback("auth_key", rows[0], true)
-                } else {
-                    callback(false, undefined)
-                }
-            })
-          return
-        }
-
-        if(req.body.auth_key){
-            db.select('SELECT * FROM users u JOIN action_links al ON u.user_id == al.user_id WHERE u.auth_key = ? AND al.type = \'email\' AND al.activated = 1 AND u.blocked = 0', [req.body.auth_key], function(rows){
-                if(rows && rows.length > 0){
-                    callback("auth_key", rows[0], true)
-                } else {
-                    callback(false, undefined)
-                }
-            })
-          return
-        }
-
-        if(user.auth_key){
-            db.select('SELECT * FROM users u JOIN action_links al ON u.user_id == al.user_id WHERE u.auth_key = ? AND al.type = \'email\' AND al.activated = 1 AND u.blocked = 0', [user.auth_key], function(rows){
-                if(rows && rows.length > 0){
-                    callback("credentials", rows[0])
-                } else {
-                    callback(false, undefined)
-                }
-            })
-          return
+    is_auth: function(req, callback){
+        if(req.headers && req.headers.authorization){
+            let token = req.headers.authorization.split(' ')
+            if(token.length > 1 && token[0] === "Bearer"){
+                token = token[1]
+                db.select('SELECT * FROM users u JOIN action_links al ON u.user_id == al.user_id WHERE u.auth_key = ? AND al.type = \'email\' AND al.activated = 1 AND u.blocked = 0', [token], function(rows){
+                    if(rows && rows.length > 0){
+                        rows[0].token = token
+                        callback("authorization", rows[0], true)
+                    } else {
+                        callback(false)
+                    }
+                })
+            } else {
+                callback(false)
+            }
+            return
         }
         
-        callback(false, undefined)
+        callback(false)
     }
 }

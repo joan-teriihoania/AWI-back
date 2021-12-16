@@ -232,22 +232,15 @@ fs.readFile("./router.json", function(err, routerContent){
  */
 function update_auth(req, res){
     return new Promise(function(resolve, reject){
-        var auth_ = req.cookies["JZ-Translation-auth"]
-        if (!auth_ || auth_ == "undefined"){
-            var auth_ = encrypt("{}")
-            res.cookie("JZ-Translation-auth", auth_)
-        }
-
-        var user = JSON.parse(decrypt(auth_))
         res.user = {
             is_auth: false
         }
         
-        auth.is_auth(user, req, async function(auth_method, info, useAuthKey){
+        auth.is_auth(req, async function(auth_method, info, useAuthKey){
             if(info){
                 getUserInfo(info.user_id).then((user) => {
                     res.user = user
-                    res.user.is_auth = auth_method != false ? true : false
+                    res.user.is_auth = auth_method !== false
                     res.user.auth_method = auth_method
                     res.user.useAuthKey = useAuthKey
                     resolve()
