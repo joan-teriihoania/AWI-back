@@ -1,0 +1,2328 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Cuisinedu",
+    "description": "This is a sample API documentation for **cuisinedu**. Please be aware that some paths require to be logged in and some are admin-locked. See the project documentation for more informations of how to acquire an (admin) account. **Only HTTPS schemes are accepted. Any HTTP request will be redirect to a secure one when received by the server.**",
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "allergenes"
+    },
+    {
+      "name": "ingredient_categories"
+    },
+    {
+      "name": "ingredients"
+    },
+    {
+      "name": "recipe_categories"
+    },
+    {
+      "name": "recipes"
+    },
+    {
+      "name": "step_components"
+    },
+    {
+      "name": "steps"
+    },
+    {
+      "name": "technical_sheets"
+    },
+    {
+      "name": "units"
+    },
+    {
+      "name": "account"
+    }
+  ],
+  "paths": {
+    "/account/login": {
+      "put": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Get a new user session token",
+        "operationId": "login",
+        "requestBody": {
+          "description": "User credentials",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Credentials matched with a registered user. Returns a session token object to be used in the Authorization header of any request to an endpoint requiring one. This session token will be unusable if the linked account is blocked, banned, deleted or the token expires (after one month).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "session_token": {
+                      "type": "string"
+                    },
+                    "user_id": {
+                      "type": "integer",
+                      "description": "The user id which the credentials refer to"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "description": "The date and time from which point the given session token will be expired and unusable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/ingredients": {
+      "get": {
+        "tags": [
+          "ingredients"
+        ],
+        "summary": "Get all ingredients",
+        "operationId": "getAllIngredients",
+        "responses": {
+          "200": {
+            "description": "An array of ingredient objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ingredient"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "ingredients"
+        ],
+        "summary": "Add a new ingredient",
+        "operationId": "addIngredient",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngredientBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new ingredient has been added. Returns the added ingredient object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ingredient"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/ingredients/{ingredientId}/allergenes/{allergeneId}": {
+      "post": {
+        "tags": [
+          "ingredients"
+        ],
+        "summary": "Add an allergene to an ingredient",
+        "operationId": "addAllergeneToIngredient",
+        "parameters": [
+          {
+            "name": "ingredientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "allergeneId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The allergene has been added to the ingredient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ingredient"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "There is no allergene with the given ID"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no ingredient with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "ingredients"
+        ],
+        "summary": "Remove an allergene from an ingredient",
+        "operationId": "removeAllergeneToIngredient",
+        "parameters": [
+          {
+            "name": "ingredientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "allergeneId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The allergene has been remove from the ingredient",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ingredient"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "There is no allergene with the given ID"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no ingredient with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/ingredients/{ingredientId}": {
+      "get": {
+        "tags": [
+          "ingredients"
+        ],
+        "summary": "Get an ingredient",
+        "operationId": "getIngredient",
+        "parameters": [
+          {
+            "name": "ingredientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ingredient object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ingredient"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no ingredient with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "ingredients"
+        ],
+        "summary": "Edit an ingredient",
+        "operationId": "editIngredient",
+        "parameters": [
+          {
+            "name": "ingredientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngredientBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The ingredient has been edited. Returns the updated ingredient object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ingredient"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no ingredient with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "ingredients"
+        ],
+        "summary": "Delete an ingredient",
+        "operationId": "deleteIngredient",
+        "parameters": [
+          {
+            "name": "ingredientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ingredient has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no ingredient with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/allergenes": {
+      "get": {
+        "tags": [
+          "allergenes"
+        ],
+        "summary": "Get all allergenes",
+        "operationId": "getAllAllergenes",
+        "responses": {
+          "200": {
+            "description": "An array of allergene objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Allergene"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "allergenes"
+        ],
+        "summary": "Add a new allergene",
+        "operationId": "addAllergene",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AllergeneBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new allergene has been added. Returns the added allergene object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Allergene"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/allergenes/{allergeneId}": {
+      "get": {
+        "tags": [
+          "allergenes"
+        ],
+        "summary": "Get an allergene",
+        "operationId": "getAllergene",
+        "parameters": [
+          {
+            "name": "allergeneId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The allergene object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Allergene"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no allergene with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "allergenes"
+        ],
+        "summary": "Edit an allergene",
+        "operationId": "editAllergene",
+        "parameters": [
+          {
+            "name": "allergeneId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AllergeneBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The allergene has been edited. Returns the updated allergene object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Allergene"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no allergene with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "allergenes"
+        ],
+        "summary": "Delete an allergene",
+        "operationId": "deleteAllergene",
+        "parameters": [
+          {
+            "name": "allergeneId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The allergene has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no allergene with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/ingredient_categories": {
+      "get": {
+        "tags": [
+          "ingredient_categories"
+        ],
+        "summary": "Get all ingredient_categories",
+        "operationId": "getAllIngredientCategories",
+        "responses": {
+          "200": {
+            "description": "An array of ingredient_category objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IngredientCategory"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "ingredient_categories"
+        ],
+        "summary": "Add a new ingredient_category",
+        "operationId": "addIngredientCategory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngredientCategoryBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new ingredient_category has been added. Returns the added ingredient_category object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngredientCategory"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/ingredient_categories/{ingredient_categoryId}": {
+      "get": {
+        "tags": [
+          "ingredient_categories"
+        ],
+        "summary": "Get an ingredient_category",
+        "operationId": "getIngredientCategory",
+        "parameters": [
+          {
+            "name": "ingredient_categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ingredient_category object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngredientCategory"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no ingredient_category with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "ingredient_categories"
+        ],
+        "summary": "Edit an ingredient_category",
+        "operationId": "editIngredientCategory",
+        "parameters": [
+          {
+            "name": "ingredient_categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngredientCategoryBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The ingredient_category has been edited. Returns the updated ingredient_category object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngredientCategory"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no ingredient_category with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "ingredient_categories"
+        ],
+        "summary": "Delete an ingredient_category",
+        "operationId": "deleteIngredientCategory",
+        "parameters": [
+          {
+            "name": "ingredient_categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The ingredient_category has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no ingredient_category with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/recipe_categories": {
+      "get": {
+        "tags": [
+          "recipe_categories"
+        ],
+        "summary": "Get all recipe_categories",
+        "operationId": "getAllRecipeCategories",
+        "responses": {
+          "200": {
+            "description": "An array of recipe_category objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecipeCategory"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "recipe_categories"
+        ],
+        "summary": "Add a new recipe_category",
+        "operationId": "addRecipeCategory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeCategoryBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new recipe_category has been added. Returns the added recipe_category object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeCategory"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/recipe_categories/{recipe_categoryId}": {
+      "get": {
+        "tags": [
+          "recipe_categories"
+        ],
+        "summary": "Get an recipe_category",
+        "operationId": "getRecipeCategory",
+        "parameters": [
+          {
+            "name": "recipe_categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recipe_category object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeCategory"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no recipe_category with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "recipe_categories"
+        ],
+        "summary": "Edit an recipe_category",
+        "operationId": "editRecipeCategory",
+        "parameters": [
+          {
+            "name": "recipe_categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeCategoryBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The recipe_category has been edited. Returns the updated recipe_category object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeCategory"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no recipe_category with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "recipe_categories"
+        ],
+        "summary": "Delete an recipe_category",
+        "operationId": "deleteRecipeCategory",
+        "parameters": [
+          {
+            "name": "recipe_categoryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recipe_category has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no recipe_category with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/recipes": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Get all recipes",
+        "operationId": "getAllRecipes",
+        "responses": {
+          "200": {
+            "description": "An array of recipe objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Recipe"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Add a new recipe",
+        "operationId": "addRecipe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new recipe has been added. Returns the added recipe object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/recipes/{recipeId}": {
+      "get": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Get an recipe",
+        "operationId": "getRecipe",
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recipe object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no recipe with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Edit an recipe",
+        "operationId": "editRecipe",
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The recipe has been edited. Returns the updated recipe object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no recipe with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Delete an recipe",
+        "operationId": "deleteRecipe",
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recipe has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no recipe with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/step_components": {
+      "get": {
+        "tags": [
+          "step_components"
+        ],
+        "summary": "Get all step_components",
+        "operationId": "getAllStepComponents",
+        "responses": {
+          "200": {
+            "description": "An array of step_component objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StepComponent"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "step_components"
+        ],
+        "summary": "Add a new step_component",
+        "operationId": "addStepComponent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StepComponentBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new step_component has been added. Returns the added step_component object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StepComponent"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/step_components/{step_componentId}": {
+      "get": {
+        "tags": [
+          "step_components"
+        ],
+        "summary": "Get an step_component",
+        "operationId": "getStepComponent",
+        "parameters": [
+          {
+            "name": "step_componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The step_component object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StepComponent"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no step_component with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "step_components"
+        ],
+        "summary": "Edit an step_component",
+        "operationId": "editStepComponent",
+        "parameters": [
+          {
+            "name": "step_componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StepComponentBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The step_component has been edited. Returns the updated step_component object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StepComponent"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no step_component with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "step_components"
+        ],
+        "summary": "Delete an step_component",
+        "operationId": "deleteStepComponent",
+        "parameters": [
+          {
+            "name": "step_componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The step_component has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no step_component with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/steps": {
+      "get": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Get all steps",
+        "operationId": "getAllSteps",
+        "responses": {
+          "200": {
+            "description": "An array of step objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Step"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Add a new step",
+        "operationId": "addStep",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StepBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new step has been added. Returns the added step object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Step"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/steps/{stepId}": {
+      "get": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Get an step",
+        "operationId": "getStep",
+        "parameters": [
+          {
+            "name": "stepId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The step object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Step"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no step with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Edit an step",
+        "operationId": "editStep",
+        "parameters": [
+          {
+            "name": "stepId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StepBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The step has been edited. Returns the updated step object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Step"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no step with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "steps"
+        ],
+        "summary": "Delete an step",
+        "operationId": "deleteStep",
+        "parameters": [
+          {
+            "name": "stepId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The step has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no step with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/technical_sheets": {
+      "get": {
+        "tags": [
+          "technical_sheets"
+        ],
+        "summary": "Get all technical_sheets",
+        "operationId": "getAllTechnicalSheets",
+        "responses": {
+          "200": {
+            "description": "An array of technical_sheet objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TechnicalSheet"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "technical_sheets"
+        ],
+        "summary": "Add a new technical_sheet",
+        "operationId": "addTechnicalSheet",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TechnicalSheetBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new technical_sheet has been added. Returns the added technical_sheet object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalSheet"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/technical_sheets/{technical_sheetId}": {
+      "get": {
+        "tags": [
+          "technical_sheets"
+        ],
+        "summary": "Get an technical_sheet",
+        "operationId": "getTechnicalSheet",
+        "parameters": [
+          {
+            "name": "technical_sheetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The technical_sheet object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalSheet"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no technical_sheet with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "technical_sheets"
+        ],
+        "summary": "Edit an technical_sheet",
+        "operationId": "editTechnicalSheet",
+        "parameters": [
+          {
+            "name": "technical_sheetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TechnicalSheetBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The technical_sheet has been edited. Returns the updated technical_sheet object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalSheet"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no technical_sheet with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "technical_sheets"
+        ],
+        "summary": "Delete an technical_sheet",
+        "operationId": "deleteTechnicalSheet",
+        "parameters": [
+          {
+            "name": "technical_sheetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The technical_sheet has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no technical_sheet with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/units": {
+      "get": {
+        "tags": [
+          "units"
+        ],
+        "summary": "Get all units",
+        "operationId": "getAllUnits",
+        "responses": {
+          "200": {
+            "description": "An array of unit objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Unit"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "units"
+        ],
+        "summary": "Add a new unit",
+        "operationId": "addUnit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The new unit has been added. Returns the added unit object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/units/{unitId}": {
+      "get": {
+        "tags": [
+          "units"
+        ],
+        "summary": "Get an unit",
+        "operationId": "getUnit",
+        "parameters": [
+          {
+            "name": "unitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The unit object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no unit with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "units"
+        ],
+        "summary": "Edit an unit",
+        "operationId": "editUnit",
+        "parameters": [
+          {
+            "name": "unitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnitBase"
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "The unit has been edited. Returns the updated unit object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no unit with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "units"
+        ],
+        "summary": "Delete an unit",
+        "operationId": "deleteUnit",
+        "parameters": [
+          {
+            "name": "unitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The unit has been deleted"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no unit with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AllergeneBase": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Allergene": {
+        "type": "object",
+        "properties": {
+          "allergene_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "IngredientCategoryBase": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "integer"
+          }
+        }
+      },
+      "IngredientCategory": {
+        "type": "object",
+        "properties": {
+          "ingredient_category_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "integer"
+          }
+        }
+      },
+      "IngredientBase": {
+        "type": "object",
+        "properties": {
+          "unit_id": {
+            "type": "integer"
+          },
+          "ingredient_category_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer"
+          }
+        }
+      },
+      "Ingredient": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "ingredient_id": {
+            "type": "integer"
+          },
+          "unit_id": {
+            "type": "integer"
+          },
+          "ingredient_category_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/Unit"
+          },
+          "category": {
+            "$ref": "#/components/schemas/IngredientCategory"
+          }
+        }
+      },
+      "RecipeCategoryBase": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "RecipeCategory": {
+        "type": "object",
+        "properties": {
+          "recipe_category_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "StepQuantity": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer"
+          },
+          "step": {
+            "$ref": "#/components/schemas/Step"
+          }
+        }
+      },
+      "RecipeBase": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "nb_couvert": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "recipe_category_id": {
+            "type": "integer"
+          }
+        }
+      },
+      "Recipe": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "recipe_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nb_couvert": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
+          },
+          "recipe_category_id": {
+            "type": "integer"
+          },
+          "category": {
+            "$ref": "#/components/schemas/RecipeCategory"
+          },
+          "author": {
+            "$ref": "#/components/schemas/User"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StepQuantity"
+            }
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ingredient"
+            }
+          }
+        }
+      },
+      "UnitBase": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Unit": {
+        "type": "object",
+        "properties": {
+          "unit_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "StepBase": {
+        "type": "object",
+        "properties": {
+          "step_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer"
+          }
+        }
+      },
+      "Step": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "step_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer"
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StepComponent"
+            }
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Ingredient"
+            }
+          }
+        }
+      },
+      "StepComponentBase": {
+        "type": "object",
+        "properties": {
+          "step_id": {
+            "type": "integer"
+          },
+          "sub_step_id": {
+            "type": "integer"
+          },
+          "sub_recipe_id": {
+            "type": "integer"
+          },
+          "sub_ingredient_id": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      },
+      "StepComponent": {
+        "type": "object",
+        "properties": {
+          "step_component_id": {
+            "type": "integer"
+          },
+          "step_id": {
+            "type": "integer"
+          },
+          "sub_step_id": {
+            "type": "integer"
+          },
+          "sub_recipe_id": {
+            "type": "integer"
+          },
+          "sub_ingredient_id": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "component": {
+            "type": "object",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Recipe"
+              },
+              {
+                "$ref": "#/components/schemas/Step"
+              },
+              {
+                "$ref": "#/components/schemas/Ingredient"
+              }
+            ]
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "img_profile": {
+            "type": "string"
+          }
+        }
+      },
+      "TechnicalSheetBase": {
+        "type": "object",
+        "properties": {
+          "recipe_id": {
+            "type": "integer"
+          },
+          "cout_assaisonnement": {
+            "type": "integer"
+          },
+          "cout_personnel": {
+            "type": "integer"
+          },
+          "cout_fluide": {
+            "type": "integer"
+          },
+          "cout_marge": {
+            "type": "integer"
+          }
+        }
+      },
+      "TechnicalSheet": {
+        "type": "object",
+        "properties": {
+          "technical_sheet_id": {
+            "type": "integer"
+          },
+          "recipe_id": {
+            "type": "integer"
+          },
+          "cout_assaisonnement": {
+            "type": "integer"
+          },
+          "cout_personnel": {
+            "type": "integer"
+          },
+          "cout_fluide": {
+            "type": "integer"
+          },
+          "cout_marge": {
+            "type": "integer"
+          },
+          "recipe": {
+            "$ref": "#/components/schemas/Recipe"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}
