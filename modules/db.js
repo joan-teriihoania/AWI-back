@@ -254,9 +254,9 @@ function isNumber(num){
                        })
                    }, 1000)
                 } else {
-                   logger.log(request)
-                   logger.log(err)
-                   callback([])
+                   logger.error(request)
+                   logger.error(err)
+                   callback()
                 }
             } else {
                 callback(rows)

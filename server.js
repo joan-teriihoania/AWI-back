@@ -38,6 +38,20 @@ var compression = require('compression');
 
 var routes = {}
 
+const cors = require('cors')
+const whitelist = [process.env.BASE_URL, 'http://localhost:4200', undefined];
+const corsOptions = {
+    origin(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error(`${origin} blocked by CORS`));
+        }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    optionsSuccessStatus: 200,
+};
+
 /*
   Read the router.json file to retrieve data about the routes
   and path for the website to load their views
@@ -70,7 +84,7 @@ const {msToTime} = require("./modules/time");
 /**
  * Server HTTP connections entry point
  */
-server.all('*', function(req, res, next){
+server.all('*', cors(corsOptions), function(req, res, next){
     if(process.env.OUTAGE === "true"){
         request('https://polygenda.betteruptime.com/').pipe(res);
         return
@@ -95,13 +109,11 @@ server.all('*', function(req, res, next){
         res.redirect(req.url.substr(0, req.url.length - 1))
         return
     }
-
     next()
 })
 
-server.get('*', function(req, res, next){
-    req.startedAt = new Date()
-    // if(res.user.is_auth && req.path.split('/')[1] != "ajax" && req.path.split('/')[1] != "api"){ logger.log("[MONITOR] ("+res.user.username+"@"+res.user.user_id+"-"+res.ip+") >> " + req.path) }
+server.all('*', function(req, res, next){
+    logger.log("[MONITOR] ("+res.ip+") >> " + req.path)
     next()
 })
 
@@ -179,7 +191,7 @@ fs.readFile("./router.json", function(err, routerContent){
     routes = JSON.parse(routerContent)
     for (const [method, paths] of Object.entries(routes['api'])) {
       for (const [path, api_info] of Object.entries(paths)) {
-        logger.log("[ROUTER] API '" + api_info['filename'] + "' linked to <"+method+"> '" + process.env.API_PATH_PREF + path + "'")
+        logger.log("[ROUTER] API"+(api_info.login ? " <U>" : "")+(api_info.admin ? " <A>" : "")+" '" + api_info['filename'] + "' linked to <"+method+"> '" + process.env.API_PATH_PREF + path)
 
         server.all(process.env.API_PATH_PREF + path, function(req, res, next) {
             update_auth(req, res).then(() => {

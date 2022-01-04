@@ -34,7 +34,6 @@ module.exports = {
                         "username": username,
                         "email": email,
                         "password": bcrypt.hashSync(password, 10),
-                        "auth_key": generateAuthKey(128),
                         "blocked": 1,
                         "blockedReason": "Votre compte doit être validé par un administrateur"
                     }
@@ -79,7 +78,7 @@ module.exports = {
                                                     {
                                                         type: "button",
                                                         text: "Activer mon compte",
-                                                        link: process.env.BASE_URL + "/account/login?al=" + activationLink[0].link
+                                                        link: process.env.FRONT_BASE_URL + "/account/activate/" + activationLink[0].link
                                                     }
                                                 ]
                                             }

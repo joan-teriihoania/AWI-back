@@ -1,6 +1,126 @@
 {
 	"api":{
 		"DELETE": {
+			"/recipes/:recipe_id/steps/:step_id": {
+				"filename": "recipes/removeStep.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer une étape à une recette",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredients/:ingredient_id/allergenes/:allergene_id": {
+				"filename": "ingredients/removeAllergene.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer un allergène à un ingrédient",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/allergenes/:allergene_id": {
+				"filename": "allergenes/delete.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer un allergène",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredient_categories/:ingredient_category_id": {
+				"filename": "ingredient_categories/delete.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer une catégorie d'ingrédient",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipe_categories/:recipe_category_id": {
+				"filename": "recipe_categories/delete.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer une catégorie de recette",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/step_components/:step_component_id": {
+				"filename": "step_components/delete.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer un composant d'étape",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/steps/:step_id": {
+				"filename": "steps/delete.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer une étape",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/technical_sheets/:technical_sheet_id": {
+				"filename": "technical_sheets/delete.js",
+				"login": true,
+				"description": "Supprimer une fiche technique",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/units/:unit_id": {
+				"filename": "units/delete.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer une unité de mesure",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredients/:ingredient_id": {
+				"filename": "ingredients/delete.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer un ingrédient",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipes/:recipe_id": {
+				"filename": "recipes/delete.js",
+				"login": true,
+				"admin": true,
+				"description": "Supprimer une recette",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
 			"/account/:username": {
 				"filename": "delete_account.js",
 				"login": true,
@@ -45,7 +165,128 @@
 				}
 			}
 		},
-		"PUT": {
+		"POST": {
+			"/ingredient_categories": {
+				"filename": "ingredient_categories/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer une catégorie d'ingrédient",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipe_categories": {
+				"filename": "recipe_categories/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer une catégorie de recette",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/steps/:step_id/components": {
+				"filename": "step_components/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer un composant d'étape",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/steps": {
+				"filename": "steps/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer une étape",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/technical_sheets": {
+				"filename": "technical_sheets/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer une fiche technique",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/units": {
+				"filename": "units/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer une unité de mesure",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredients": {
+				"filename": "ingredients/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer un ingrédient",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/allergenes": {
+				"filename": "allergenes/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer un allergène",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipes": {
+				"filename": "recipes/create.js",
+				"login": true,
+				"admin": true,
+				"description": "Créer une recette",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipes/:recipe_id/steps/:step_id": {
+				"filename": "recipes/addStep.js",
+				"login": true,
+				"admin": true,
+				"description": "Ajouter une étape à une recette",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredients/:ingredient_id/allergenes/:allergene_id": {
+				"filename": "ingredients/addAllergene.js",
+				"login": true,
+				"admin": true,
+				"description": "Ajouter un allergène à un ingrédient",
+				"params": [],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
 			"/admin/backups": {
 				"filename": "admin_create_backup.js",
 				"login": true,
@@ -58,7 +299,7 @@
 				}
 			}
 		},
-		"POST": {
+		"PUT": {
 			"/account/login": {
 				"filename": "login.js",
 				"login": false,
@@ -204,9 +445,306 @@
 					"success": "JSON",
 					"error": "String"
 				}
+			},
+			"/allergenes/:allergene_id": {
+				"filename": "allergenes/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour un allergène",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredient_categories/:ingredient_category_id": {
+				"filename": "ingredient_categories/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour une catégorie d'allergène",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredients/:ingredient_id": {
+				"filename": "ingredients/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour un ingrédient",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipe_categories/:recipe_category_id": {
+				"filename": "recipe_categories/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour une catégorie de recette",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipes/:recipe_id": {
+				"filename": "recipes/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour une recette",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/step_components/:step_component_id": {
+				"filename": "step_components/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour une composant d'étape",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/steps/:step_id": {
+				"filename": "steps/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour une étape",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/technical_sheets/:technical_sheet_id": {
+				"filename": "technical_sheets/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour une fiche technique",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/units/:unit_id": {
+				"filename": "units/edit.js",
+				"login": true,
+				"admin": true,
+				"description": "Mettre à jour une unité",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
 			}
 		},
 		"GET": {
+			"/ingredient_categories": {
+				"filename": "ingredient_categories/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer toutes les catégories d'ingrédient",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredient_categories/:ingredient_category_id": {
+				"filename": "ingredient_categories/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer une catégorie d'ingrédient par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipe_categories": {
+				"filename": "recipe_categories/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer toutes les catégories de recette",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipe_categories/:recipe_category_id": {
+				"filename": "recipe_categories/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer une catégorie de recette par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/step_components": {
+				"filename": "step_components/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer toutes les composants d'étape",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/step_components/:step_component_id": {
+				"filename": "step_components/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer un composant d'étape par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/steps": {
+				"filename": "steps/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer toutes les étapes",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/steps/:step_id": {
+				"filename": "steps/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer une étape par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/technical_sheets": {
+				"filename": "technical_sheets/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer toutes les fiches techniques",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/technical_sheets/:technical_sheet_id": {
+				"filename": "technical_sheets/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer une fiche technique par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/units": {
+				"filename": "units/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer toutes les unités de mesure",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/units/:unit_id": {
+				"filename": "units/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer une unité de mesure par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/allergenes": {
+				"filename": "allergenes/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer toutes les allergènes",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/allergenes/:allergene_id": {
+				"filename": "allergenes/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer un allergène par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredients": {
+				"filename": "ingredients/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer tous les ingrédients",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/ingredients/:ingredient_id": {
+				"filename": "ingredients/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer un ingrédient par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipes": {
+				"filename": "recipes/getAll.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer toutes les recettes",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
+			"/recipes/:recipe_id": {
+				"filename": "recipes/getById.js",
+				"login": true,
+				"admin": true,
+				"description": "Récupérer une recette par ID",
+				"params":[],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
 			"/account/download.json": {
 				"filename": "download_account.js",
 				"login": true,

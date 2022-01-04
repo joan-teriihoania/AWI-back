@@ -101,6 +101,30 @@
             "not_null": true
         }
     ],
+    "session_tokens": [
+        {
+            "name": "user_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false,
+            "foreign": {
+                "table": "users",
+                "attribute": "user_id"
+            }
+        },
+        {
+            "name": "session_token",
+            "type": "TEXT",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "expires_at",
+            "type": "DATETIME",
+            "primary": false,
+            "not_null": true
+        }
+    ],
     "users":[
         {
             "name": "user_id",
@@ -131,12 +155,6 @@
             "type": "TEXT",
             "primary": false,
             "not_null": false
-        },
-        {
-            "name": "auth_key",
-            "type": "TEXT UNIQUE",
-            "primary": false,
-            "not_null": true
         },
         {
             "name": "blocked",
@@ -247,28 +265,12 @@
             "not_null": true
         }
     ],
-    "recipe_steps": [
+    "steps": [
         {
-            "name": "recipe_step_id",
+            "name": "step_id",
             "type": "INTEGER",
             "primary": true,
             "not_null": false
-        },
-        {
-            "name": "recipe_id",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true,
-            "foreign": {
-                "table": "recipes",
-                "attribute": "recipe_id"
-            }
-        },
-        {
-            "name": "position",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
         },
         {
             "name": "name",
@@ -283,43 +285,71 @@
             "not_null": true
         },
         {
-            "name": "quantity",
-            "type": "INTEGER",
-            "primary": false,
-            "not_null": true
-        },
-        {
             "name": "duration",
             "type": "REAL",
             "primary": false,
             "not_null": true
         }
     ],
-    "recipe_step_components": [
+    "recipe_steps": [
         {
-            "name": "recipe_step_component_id",
+            "name": "step_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false,
+            "foreign": {
+                "table": "steps",
+                "attribute": "step_id"
+            }
+        },
+        {
+            "name": "recipe_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false,
+            "foreign": {
+                "table": "recipes",
+                "attribute": "recipe_id"
+            }
+        },
+        {
+            "name": "position",
             "type": "INTEGER",
             "primary": true,
             "not_null": false
         },
         {
-            "name": "recipe_step_id",
+            "name": "quantity",
+            "type": "INTEGER",
+            "primary": false,
+            "not_null": true
+        }
+    ],
+    "step_components": [
+        {
+            "name": "step_component_id",
+            "type": "INTEGER",
+            "primary": true,
+            "not_null": false
+        },
+        {
+            "name": "step_id",
             "type": "INTEGER",
             "primary": false,
             "not_null": true,
             "foreign": {
-                "table": "recipe_steps",
-                "attribute": "recipe_step_id"
+                "table": "steps",
+                "attribute": "step_id"
             }
         },
         {
-            "name": "sub_recipe_step_id",
+            "name": "sub_step_id",
             "type": "INTEGER",
             "primary": false,
             "not_null": false,
             "foreign": {
-                "table": "recipe_steps",
-                "attribute": "recipe_step_id"
+                "table": "steps",
+                "attribute": "step_id"
             }
         },
         {

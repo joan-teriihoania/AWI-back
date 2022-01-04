@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --icu-data-dir=./node_modules/full-icu server.js >>.data/logs.txt 2>&1",
-    "dev": "node --icu-data-dir=./node_modules/full-icu server.js",
+    "dev": "node --icu-data-dir=./node_modules/full-icu server.js --trace-warnings",
     "docs": "jsdoc -R README.md -d ressources/docs -c jsdoc.json ."
   },
   "engines": {
@@ -30,6 +30,7 @@
     "casperjs": "^1.1.4",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "diff": "^5.0.0",
     "discord-oauth2": "*",

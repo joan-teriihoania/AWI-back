@@ -132,15 +132,14 @@ module.exports = {
                                             if(activationLink && activationLink.length > 0){
                                                 sendMail(
                                                     fields["email"],
-                                                    "Activation de votre compte Polygenda",
+                                                    "Activation de votre compte",
                                                     fs.readFileSync('./api/register/email_activation_link.html', {encoding: 'utf-8'})
                                                     .replace(/{{ username }}/gi, res.user.username)
-                                                    .replace(/{{ website }}/gi, process.env.BASE_URL)
-                                                    .replace(/{{ action_link }}/gi, process.env.BASE_URL + "/account/login?al=" + activationLink[0].link)
+                                                    .replace(/{{ website }}/gi, process.env.FRONT_BASE_URL)
+                                                    .replace(/{{ action_link }}/gi, process.env.FRONT_BASE_URL + "/account/activate/" + activationLink[0].link)
                                                 ).then((info) => {
                                                     new_email = fields["email"]
                                                     response["email"] = fields["email"]
-                                                    res.cookie("JZ-Translation-auth", "")
                                                     resolve()
                                                 }).catch((error) => {
                                                     errors.push(error)

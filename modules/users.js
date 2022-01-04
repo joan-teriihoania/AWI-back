@@ -149,7 +149,20 @@ setInterval(() => {
     }
 }, 1000);
 
-function getUserInfo(user_id, partial = false){
+function getUserPublic(user_id){
+    return new Promise((resolve, reject) => {
+        getUserInfo((user_id)).then((user) => {
+            resolve({
+                user_id: user.user_id,
+                username: user.username,
+                email: user.email,
+                img_profile: user.img_profile
+            })
+        }).catch(reject)
+    })
+}
+
+function getUserInfo(user_id){
     return new Promise((resolve, reject) => {
         if(cachedUsers[user_id]) resolve(cachedUsers[user_id].content)
         db.select("SELECT * FROM users WHERE user_id = " + user_id, function(users){
@@ -215,5 +228,6 @@ module.exports = {
     checkURL: checkURL,
     uncacheUser: uncacheUser,
     blockAccount,
-    checkPassword
+    checkPassword,
+    getUserPublic
 }

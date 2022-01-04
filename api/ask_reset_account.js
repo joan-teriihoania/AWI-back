@@ -20,11 +20,11 @@ module.exports = {
                             if(activationLink && activationLink.length > 0){
                                 sendMail(
                                     req.query.email,
-                                    "Réinitialisation de votre compte Polygenda",
+                                    "Réinitialisation de votre compte",
                                     fs.readFileSync('./api/ask_reset_account/email_reset_link.html', {encoding: 'utf-8'})
                                     .replace(/{{ username }}/gi, rows[0].username)
-                                    .replace(/{{ website }}/gi, process.env.BASE_URL)
-                                    .replace(/{{ action_link }}/gi, process.env.BASE_URL + "/account/reset?al=" + activationLink[0].link)
+                                    .replace(/{{ website }}/gi, process.env.FRONT_BASE_URL)
+                                    .replace(/{{ action_link }}/gi, process.env.FRONT_BASE_URL + "/account/reset/" + activationLink[0].link)
                                 )
                             }
                             res.status(200)

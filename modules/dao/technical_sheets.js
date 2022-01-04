@@ -21,6 +21,32 @@ function createTechnicalSheet(recipe_id, cout_assaisonnement, cout_personnel, co
     ])
 }
 
+
+function getAllTechnicalSheets(){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM technical_sheets", [], (technical_sheets) => {
+            if(technical_sheets){
+                let o = []
+                let p = []
+
+                for (let i = 0; i < technical_sheets.length; i++) {
+                    const technical_sheet = technical_sheets[i]
+                    p.push(new Promise(async (resolve) => {
+                        o.push(await getTechnicalSheet(technical_sheet.technical_sheet_id))
+                        resolve()
+                    }))
+                }
+
+                Promise.all(p).then(() => {
+                    resolve(o)
+                })
+            } else {
+                reject("Error while requesting technical sheets")
+            }
+        })
+    })
+}
+
 function getTechnicalSheet(technical_sheet_id){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM technical_sheets WHERE technical_sheet_id = ?", [technical_sheet_id], async (technical_sheets) => {
@@ -28,7 +54,7 @@ function getTechnicalSheet(technical_sheet_id){
                 technical_sheets[0].recipe = await getRecipe(technical_sheets[0].recipe_id)
                 resolve(technical_sheets[0])
             } else {
-                reject()
+                reject("Technical sheet " + technical_sheet_id + " not found")
             }
         })
     })
@@ -36,6 +62,7 @@ function getTechnicalSheet(technical_sheet_id){
 
 module.exports = {
     getTechnicalSheet,
+    getAllTechnicalSheets,
     createTechnicalSheet,
     deleteTechnicalSheet,
     editTechnicalSheet
