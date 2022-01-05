@@ -21,7 +21,7 @@ module.exports = {
                     res.status(200)
                     res.send('OK')
                 } else {
-                    res.status(400)
+                    res.status(404)
                     res.send('La notification a déjà été marquée comme lue ou n\'existe pas')
                 }
             })

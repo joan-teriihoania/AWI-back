@@ -44,9 +44,158 @@
     },
     {
       "name": "account"
+    },
+    {
+      "name": "admin"
     }
   ],
   "paths": {
+    "/account/register": {
+      "put": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Create an account",
+        "operationId": "register",
+        "requestBody": {
+          "description": "User account information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The account has been created but isn't activated nor authorized. To activate it, an email has been sent to confirm the registration. Authorization requires an admin ascent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "activationLink": {
+                      "description": "Will be removed in the future",
+                      "type": "string"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing parameter"
+          },
+          "500": {
+            "description": "Server-side error occured. The origin of the error will be detailed in the returned string message."
+          }
+        }
+      }
+    },
+    "/account/activate/{id}": {
+      "put": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Activate an account",
+        "operationId": "activateAccount",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The account has been successfully activated"
+          },
+          "400": {
+            "description": "An error occured. This can happen when the link provided isn't valid or expired or if an unknown server-side problem occured."
+          }
+        }
+      }
+    },
+    "/account/reset/{id}": {
+      "put": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Reset the password of an account",
+        "operationId": "resetAccount",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "new_password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The new password has been set"
+          },
+          "400": {
+            "description": "An error occured. This can happen when the link provided isn't valid or expired or if an unknown server-side problem occured."
+          }
+        }
+      }
+    },
+    "/account/reset": {
+      "put": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Ask for the reset of the password of an account",
+        "operationId": "askResetAccount",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A mail have been sent with a link to set a new password if a user is registered if the given email"
+          },
+          "400": {
+            "description": "An error occured. The origin of the error will be detailed in the returned string message."
+          }
+        }
+      }
+    },
     "/account/login": {
       "put": {
         "tags": [
@@ -88,7 +237,7 @@
                       "type": "integer",
                       "description": "The user id which the credentials refer to"
                     },
-                    "expiresAt": {
+                    "expires_at": {
                       "type": "string",
                       "description": "The date and time from which point the given session token will be expired and unusable"
                     }
@@ -101,6 +250,202 @@
             "description": "Invalid credentials"
           }
         }
+      }
+    },
+    "/account": {
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Get logged user information",
+        "operationId": "getAccount",
+        "responses": {
+          "200": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Edit the user profile informations",
+        "operationId": "editAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEditable"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/schemas/User"
+          },
+          "400": {
+            "description": "Missing parameter"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "500": {
+            "description": "An internal error occured. Detailed information will be given in the response body."
+          }
+        }
+      }
+    },
+    "/account/{username}": {
+      "delete": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Delete an account",
+        "operationId": "deleteAccount",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The account has been deleted"
+          },
+          "400": {
+            "description": "Missing parameter"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "The username does not match the one of the account being deleted"
+          },
+          "404": {
+            "description": "An internal error occured and the account could not be found."
+          }
+        }
+      }
+    },
+    "/account/notifications": {
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Get account notifications",
+        "operationId": "getNotifications",
+        "responses": {
+          "200": {
+            "description": "All notifications of the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "notification_id": {
+                      "type": "integer"
+                    },
+                    "icon": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "seen": {
+                      "type": "boolean"
+                    },
+                    "link": {
+                      "type": "string"
+                    },
+                    "user_id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
+          }
+        }
+      }
+    },
+    "/account/notifications/{notificationId}": {
+      "put": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Mark a notification as seen",
+        "operationId": "markNotificationAsSeen",
+        "parameters": [
+          {
+            "name": "notificationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The notification has been marked as seen"
+          },
+          "400": {
+            "description": "Missing parameter"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "404": {
+            "description": "The notification does not exists or is already marked as seen"
+          }
+        }
+      }
+    },
+    "/account/download.json": {
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "summary": "Download all the informations stored of the account (required by law)",
+        "operationId": "downloadAccount",
+        "responses": {
+          "200": {
+            "description": "Account informations"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
       }
     },
     "/ingredients": {
@@ -123,6 +468,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -160,6 +508,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -210,6 +561,9 @@
           },
           "400": {
             "description": "There is no allergene with the given ID"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -262,6 +616,9 @@
           "400": {
             "description": "There is no allergene with the given ID"
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -303,6 +660,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -354,6 +714,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -386,6 +749,9 @@
         "responses": {
           "200": {
             "description": "The ingredient has been deleted"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -421,6 +787,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -458,6 +827,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -497,6 +869,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -548,6 +923,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -580,6 +958,9 @@
         "responses": {
           "200": {
             "description": "The allergene has been deleted"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -615,6 +996,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -652,6 +1036,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -691,6 +1078,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -742,6 +1132,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -774,6 +1167,9 @@
         "responses": {
           "200": {
             "description": "The ingredient_category has been deleted"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -809,6 +1205,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -846,6 +1245,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -885,6 +1287,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -936,6 +1341,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -968,6 +1376,9 @@
         "responses": {
           "200": {
             "description": "The recipe_category has been deleted"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1003,6 +1414,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1040,6 +1454,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1079,6 +1496,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1130,6 +1550,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -1162,6 +1585,130 @@
         "responses": {
           "200": {
             "description": "The recipe has been deleted"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no recipe with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/recipes/{recipeId}/steps/{stepId}": {
+      "post": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Add step to recipe",
+        "operationId": "addStepToRecipe",
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "stepId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "position": {
+                    "type": "integer"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The step has been added to the recipe. Returns the updated recipe object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "There is no recipe with the given ID"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "recipes"
+        ],
+        "summary": "Remove step to recipe",
+        "operationId": "removeStepToRecipe",
+        "parameters": [
+          {
+            "name": "recipeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "stepId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The step has been removed to the recipe. Returns the updated recipe object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Recipe"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1197,6 +1744,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1234,6 +1784,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1273,6 +1826,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1324,6 +1880,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -1356,6 +1915,9 @@
         "responses": {
           "200": {
             "description": "The step_component has been deleted"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1391,6 +1953,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1428,6 +1993,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1467,6 +2035,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1518,6 +2089,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -1550,6 +2124,9 @@
         "responses": {
           "200": {
             "description": "The step has been deleted"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1585,6 +2162,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1622,6 +2202,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1661,6 +2244,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1712,6 +2298,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -1744,6 +2333,9 @@
         "responses": {
           "200": {
             "description": "The technical_sheet has been deleted"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1779,6 +2371,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1816,6 +2411,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1855,6 +2453,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -1906,6 +2507,9 @@
               }
             }
           },
+          "401": {
+            "description": "Login required"
+          },
           "403": {
             "description": "Access denied. Admin level access required."
           },
@@ -1938,6 +2542,9 @@
         "responses": {
           "200": {
             "description": "The unit has been deleted"
+          },
+          "401": {
+            "description": "Login required"
           },
           "403": {
             "description": "Access denied. Admin level access required."
@@ -2253,6 +2860,23 @@
           }
         }
       },
+      "UserEditable": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "img_profile": {
+            "type": "object"
+          }
+        }
+      },
       "User": {
         "type": "object",
         "properties": {
@@ -2266,6 +2890,12 @@
             "type": "string"
           },
           "img_profile": {
+            "type": "string"
+          },
+          "blocked": {
+            "type": "boolean"
+          },
+          "blockedReason": {
             "type": "string"
           }
         }

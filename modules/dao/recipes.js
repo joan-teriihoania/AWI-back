@@ -9,6 +9,7 @@ function editRecipe(recipe_id, arr){
 
 function deleteRecipe(recipe_id){
     return Promise.all([
+        db.run("DELETE FROM technical_sheets WHERE recipe_id = ?", [recipe_id]),
         db.run("DELETE FROM recipes WHERE recipe_id = ?", [recipe_id]),
         db.run("DELETE FROM recipe_steps WHERE recipe_id = ?", [recipe_id])
     ])
