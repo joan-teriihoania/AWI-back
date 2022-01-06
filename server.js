@@ -39,7 +39,7 @@ var compression = require('compression');
 var routes = {}
 
 const cors = require('cors')
-const whitelist = [process.env.BASE_URL, 'http://localhost:4200', undefined];
+const whitelist = [process.env.BASE_URL, process.env.FRONT_BASE_URL, 'http://localhost:4200', undefined];
 const corsOptions = {
     origin(origin, callback) {
         if (whitelist.indexOf(origin) !== -1) {
