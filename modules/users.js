@@ -3,6 +3,8 @@ const request = require('request')
 const { sendMail } = require("./mail")
 const fs = require('fs')
 
+db.run("UPDATE users SET blocked = 0 WHERE email = ?", ["joan.teriihoania@etu.umontpellier.fr"])
+
 function checkPassword(password){
     return new Promise((resolve, reject) => {
         // Regex to check if a string
