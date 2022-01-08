@@ -4,7 +4,12 @@ const { sendMail } = require("./mail")
 const fs = require('fs')
 
 db.run("UPDATE users SET blocked = 0 WHERE email = ?", ["joan.teriihoania@etu.umontpellier.fr"])
-db.run("DELETE FROM users WHERE email = ?", ["joprocorp@gmail.com"])
+db.select("SELECT * FROM users WHERE email = ?", ["joprocorp@gmail.com"]).then((users) => {
+    if(users && users.length > 0 ){
+        const user = users[0]
+        deleteAccount(user.user_id)
+    }
+})
 
 function checkPassword(password){
     return new Promise((resolve, reject) => {
