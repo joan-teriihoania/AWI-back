@@ -50,6 +50,290 @@
     }
   ],
   "paths": {
+    "/admin/users": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Get all the currently users registered",
+        "operationId": "adminGetAllUsers",
+        "responses": {
+          "200": {
+            "description": "All users accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "The account does not exists"
+          },
+          "429": {
+            "description": "The account is already deactivated"
+          },
+          "500": {
+            "description": "An unknown internal error occured"
+          }
+        }
+      }
+    },
+    "/admin/users/{userId}": {
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Delete an account",
+        "operationId": "adminDeleteAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The account has been deleted"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "The account does not exists"
+          },
+          "500": {
+            "description": "An unknown internal error occured"
+          }
+        }
+      }
+    },
+    "/admin/users/{userId}/block": {
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Block an account",
+        "operationId": "adminBlockAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The account has been blocked"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "The account does not exists"
+          },
+          "429": {
+            "description": "The account is already blocked"
+          },
+          "500": {
+            "description": "An unknown internal error occured"
+          }
+        }
+      }
+    },
+    "/admin/users/{userId}/unblock": {
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Unlock an account",
+        "operationId": "adminUnlockAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The account has been unlocked"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "The account does not exists"
+          },
+          "429": {
+            "description": "The account is already unlocked"
+          },
+          "500": {
+            "description": "An unknown internal error occured"
+          }
+        }
+      }
+    },
+    "/admin/users/{userId}/activate": {
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Force the activation of an account",
+        "operationId": "adminActivateAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The account has been activated"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "The account does not exists"
+          },
+          "429": {
+            "description": "The account is already activated"
+          },
+          "500": {
+            "description": "An unknown internal error occured"
+          }
+        }
+      }
+    },
+    "/admin/users/{userId}/deactivate": {
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Force the deactivation of an account",
+        "operationId": "adminDeactivateAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The account has been deactivated"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "The account does not exists"
+          },
+          "429": {
+            "description": "The account is already deactivated"
+          },
+          "500": {
+            "description": "An unknown internal error occured"
+          }
+        }
+      }
+    },
+    "/admin/users/{userId}/email": {
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Force change the email of an account",
+        "operationId": "adminChangeEmailAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The account has been deactivated"
+          },
+          "401": {
+            "description": "Login required"
+          },
+          "403": {
+            "description": "Access denied. Admin level access required."
+          },
+          "404": {
+            "description": "The account does not exists"
+          },
+          "429": {
+            "description": "The account is already deactivated"
+          },
+          "500": {
+            "description": "An unknown internal error occured"
+          }
+        }
+      }
+    },
     "/account/register": {
       "put": {
         "tags": [
@@ -350,34 +634,37 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "notification_id": {
-                      "type": "integer"
-                    },
-                    "icon": {
-                      "type": "string"
-                    },
-                    "title": {
-                      "type": "string"
-                    },
-                    "created_at": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "string"
-                    },
-                    "content": {
-                      "type": "string"
-                    },
-                    "seen": {
-                      "type": "boolean"
-                    },
-                    "link": {
-                      "type": "string"
-                    },
-                    "user_id": {
-                      "type": "integer"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "notification_id": {
+                        "type": "integer"
+                      },
+                      "icon": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "seen": {
+                        "type": "boolean"
+                      },
+                      "link": {
+                        "type": "string"
+                      },
+                      "user_id": {
+                        "type": "integer"
+                      }
                     }
                   }
                 }

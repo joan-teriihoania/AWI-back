@@ -3,7 +3,7 @@ const {createAllergene, getAllergene, deleteAllergene} = require("../../modules/
 module.exports = {
     exec: function(req, res){
         deleteAllergene(req.params.allergene_id).then(() => {
-            res.send("OK")
+            res.send({})
         }).catch((err) => {
             res.status(500)
             res.send(err)

@@ -8,7 +8,7 @@ const {deleteRecipeCategory} = require("../../modules/dao/recipe_categories");
 module.exports = {
     exec: function(req, res){
         deleteRecipeCategory(req.params.recipe_category_id).then(() => {
-            res.send("OK")
+            res.send({})
         }).catch((err) => {
             res.status(500)
             res.send(err)

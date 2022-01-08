@@ -6,7 +6,7 @@ const {deleteStep} = require("../../modules/dao/steps");
 module.exports = {
     exec: function(req, res){
         deleteStep(req.params.step_id).then(() => {
-            res.send("OK")
+            res.send({})
         }).catch((err) => {
             res.status(500)
             res.send(err)

@@ -12,7 +12,7 @@ module.exports = {
                     checkPassword(req.query.new_password).then(() => {
                         db.run("UPDATE action_links SET activated = 1 WHERE action_link_id = " + rows[0].action_link_id).then(() => {
                             db.run("UPDATE users SET password = ? WHERE user_id = " + rows[0].user_id, [bcrypt.hashSync(req.body.new_password, 10)]).then(() => {
-                                res.send("OK")
+                                res.send({})
                             }).catch(() => {
                                 res.status(400)
                                 res.send("Une erreur s'est produite durant la réinitialisation de votre compte")

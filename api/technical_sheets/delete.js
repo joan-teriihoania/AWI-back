@@ -8,7 +8,7 @@ const {deleteTechnicalSheet} = require("../../modules/dao/technical_sheets");
 module.exports = {
     exec: function(req, res){
         deleteTechnicalSheet(req.params.technical_sheet_id).then(() => {
-            res.send("OK")
+            res.send({})
         }).catch((err) => {
             res.status(500)
             res.send(err)
