@@ -6,8 +6,8 @@ const fs = require('fs')
 
 module.exports = {
     exec: function(req, res){
-        if(req.query.email){
-            db.select('SELECT * FROM users u JOIN action_links al ON u.user_id == al.user_id WHERE u.email = ? AND al.type = \'email\' AND al.activated = 1', [req.query.email], function(rows){
+        if(req.body.email){
+            db.select('SELECT * FROM users u JOIN action_links al ON u.user_id == al.user_id WHERE u.email = ? AND al.type = \'email\' AND al.activated = 1', [req.body.email], function(rows){
                 if(rows && rows.length > 0){
                     db.insert("action_links", [
                         {
@@ -19,7 +19,7 @@ module.exports = {
                         db.select("SELECT * FROM action_links WHERE action_link_id = ?", [linkId], function(activationLink){
                             if(activationLink && activationLink.length > 0){
                                 sendMail(
-                                    req.query.email,
+                                    req.body.email,
                                     "Réinitialisation de votre compte",
                                     fs.readFileSync('./api/ask_reset_account/email_reset_link.html', {encoding: 'utf-8'})
                                     .replace(/{{ username }}/gi, rows[0].username)

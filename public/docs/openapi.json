@@ -433,16 +433,23 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "new_password",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
+        "requestBody": {
+          "description": "New password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "new_password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The new password has been set"
@@ -460,16 +467,21 @@
         ],
         "summary": "Ask for the reset of the password of an account",
         "operationId": "askResetAccount",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "description": "New password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                }
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "A mail have been sent with a link to set a new password if a user is registered if the given email"
@@ -2953,17 +2965,6 @@
           }
         }
       },
-      "StepQuantity": {
-        "type": "object",
-        "properties": {
-          "quantity": {
-            "type": "integer"
-          },
-          "step": {
-            "$ref": "#/components/schemas/Step"
-          }
-        }
-      },
       "RecipeBase": {
         "type": "object",
         "properties": {
@@ -3011,7 +3012,15 @@
           "steps": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/StepQuantity"
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "integer"
+                },
+                "step": {
+                  "$ref": "#/components/schemas/Step"
+                }
+              }
             }
           },
           "ingredients": {
