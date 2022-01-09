@@ -53,7 +53,7 @@ function getIngredient(ingredient_id){
         db.select("SELECT * FROM ingredients WHERE ingredient_id = ?", [ingredient_id], async (ingredients) => {
             if(ingredients && ingredients.length > 0){
                 ingredients[0].type = "ingredient"
-                ingredients[0].ingredient_category = await new Promise((resolve) => {
+                ingredients[0].category = await new Promise((resolve) => {
                     getIngredientCategory(ingredients[0].ingredient_category_id)
                         .then(resolve)
                         .catch(reject)
