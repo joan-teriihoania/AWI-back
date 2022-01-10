@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> server</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="dao.module_allergenes.html">allergenes</a></li><li><a href="dao.module_ingredient_categories.html">ingredient_categories</a></li><li><a href="dao.module_ingredients.html">ingredients</a></li><li><a href="dao.module_recipe_categories.html">recipe_categories</a></li><li><a href="dao.module_recipes.html">recipes</a></li><li><a href="dao.module_session_tokens.html">session_tokens</a></li><li><a href="dao.module_step_components.html">step_components</a></li><li><a href="dao.module_steps.html">steps</a></li><li><a href="dao.module_technical_sheets.html">technical_sheets</a></li><li><a href="dao.module_units.html">units</a></li><li><a href="module-auth.html">auth</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#msToTime">msToTime</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Module</p>
+                    <h1>server</h1>
+                </header>
+                
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">This is the main module initializing the process and overseeing the execution.It manages the HTTP and WebSocket connections and dispatch them to their proper controllers.It also loads in the routing logic as well as managing the rendering process</div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="server.js.html" class="button">View Source</a>
+            <span>
+                <a href="server.js.html">server.js</a>, <a href="server.js.html#line1">line 1</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Methods</h1>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~autoreboot">
+        <a class="href-link" href="#~autoreboot">#</a>
+        
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                autoreboot<span class="signature">(rebootHour, rebootMinute)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Schedules a process reboot at the specified time to launch a new instance of load_icals loop
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>rebootHour</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Integer</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+          5
+      
+      </td>
+  
+
+  <td class="description last">The hour at which the reboot will be scheduled</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>rebootMinute</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Integer</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+          0
+      
+      </td>
+  
+
+  <td class="description last">The minute at which the reboot will be scheduled</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="server.js.html" class="button">View Source</a>
+            <span>
+                <a href="server.js.html">server.js</a>, <a href="server.js.html#line542">line 542</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~generateAuthKey">
+        <a class="href-link" href="#~generateAuthKey">#</a>
+        
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                generateAuthKey<span class="signature">(length, characters)</span><span class="type-signature"> &rarr; {String}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Generate an random authentification key of specified length.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>length</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Integer</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">The length of the authentification key</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>characters</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+          ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+      
+      </td>
+  
+
+  <td class="description last">The characters that the authentification key will be composed of</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="server.js.html" class="button">View Source</a>
+            <span>
+                <a href="server.js.html">server.js</a>, <a href="server.js.html#line518">line 518</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~render_page">
+        <a class="href-link" href="#~render_page">#</a>
+        
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                render_page<span class="signature">(view, req, res, use_framework, replaceValues, callback)</span><span class="type-signature"> &rarr; {Promise}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Page rendering function. It will load the required model and ressource base files, call the controller, renderthe template file and send the resulting view to the user (if it wasn't sent out by a higher function or the controller).
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+            <th>Default</th>
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>view</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">ViewInfo</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">The view informations to render</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>req</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">express.Request</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">The request object given by express</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>res</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">express.Response</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">The response object given by express</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>use_framework</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">boolean</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+          true
+      
+      </td>
+  
+
+  <td class="description last">Whether the page rendered will use the framework base (useful for loading ajax pages).The framework base file contains the sidebar, navbar, header and footer elements as well as all the scripts and styles filesneeded when loading the page for the first time. To save ressources, when changing only the page content, you should usethis parameter.</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>replaceValues</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">An object containing pairs of <Key, Value>.The elements contained in this object will be used to replace values in the model as : {{ Key }} -> Value.The values will also be passed to the EJS rendering engine, this allows passing data from the low level to high level rendering functions.</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+      <td class="default">
+      
+      </td>
+  
+
+  <td class="description last">A function that will be called after the view is rendered.If set, the view will NOT be sent to the user.</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="server.js.html" class="button">View Source</a>
+            <span>
+                <a href="server.js.html">server.js</a>, <a href="server.js.html#line288">line 288</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~replaceAll">
+        <a class="href-link" href="#~replaceAll">#</a>
+        
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                replaceAll<span class="signature">(str, replaceWhat, replaceTo)</span><span class="type-signature"> &rarr; {String}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Replaces all occurences of replaceWhat in str to replaceTo
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>str</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The string which will be modified</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>replaceWhat</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The string that will be replaced</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>replaceTo</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The string to which replaceWhat will be replaced to</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="server.js.html" class="button">View Source</a>
+            <span>
+                <a href="server.js.html">server.js</a>, <a href="server.js.html#line508">line 508</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~update_auth">
+        <a class="href-link" href="#~update_auth">#</a>
+        
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                update_auth<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        User authentification update function. It will modify the "res" object by adding a "user" property with the userinformations from the database depending if the given request object contains valid user authentification informations.This returns a Promise that will always resolve, whether the user has been authentificated or not as it is not its mainobjective. However, it is possible to know if the user has been authentificated by checking the res.user.is_auth property.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>req</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">express.Request</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The request object given by express</td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>res</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">express.Response</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The response object given by express</td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="server.js.html" class="button">View Source</a>
+            <span>
+                <a href="server.js.html">server.js</a>, <a href="server.js.html#line246">line 246</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

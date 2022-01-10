@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> modules/dao/recipes.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="dao.module_allergenes.html">allergenes</a></li><li><a href="dao.module_ingredient_categories.html">ingredient_categories</a></li><li><a href="dao.module_ingredients.html">ingredients</a></li><li><a href="dao.module_recipe_categories.html">recipe_categories</a></li><li><a href="dao.module_recipes.html">recipes</a></li><li><a href="dao.module_session_tokens.html">session_tokens</a></li><li><a href="dao.module_step_components.html">step_components</a></li><li><a href="dao.module_steps.html">steps</a></li><li><a href="dao.module_technical_sheets.html">technical_sheets</a></li><li><a href="dao.module_units.html">units</a></li><li><a href="module-auth.html">auth</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#msToTime">msToTime</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>modules/dao/recipes.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* Provide every functions required to interact with recipes
+* @module dao.recipes
+* */
+
+const db = require('../db')
+const {getRecipeCategory} = require("./recipe_categories");
+const {getUserInfo, getUserPublic} = require("../users");
+const {getStep} = require("./steps");
+
+/**
+ * Change the propertie of a recipe
+ * @param recipe_id
+ * @param arr
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function editRecipe(recipe_id, arr){
+    return db.update("recipes", arr, "recipe_id = " + recipe_id)
+}
+
+/**
+ * Delete a recipe
+ * @param recipe_id
+ * @returns {Promise&lt;unknown[]>}
+ */
+function deleteRecipe(recipe_id){
+    return Promise.all([
+        db.run("DELETE FROM technical_sheets WHERE recipe_id = ?", [recipe_id]),
+        db.run("DELETE FROM recipes WHERE recipe_id = ?", [recipe_id]),
+        db.run("DELETE FROM recipe_steps WHERE recipe_id = ?", [recipe_id])
+    ])
+}
+
+/**
+ * Create a recipe
+ * @param name
+ * @param nb_couvert
+ * @param user_id
+ * @param recipe_category_id
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function createRecipe(name, nb_couvert, user_id, recipe_category_id){
+    return db.insert("recipes", [
+        {
+            name: name,
+            nb_couvert: nb_couvert,
+            user_id: user_id,
+            recipe_category_id: recipe_category_id
+        }
+    ])
+}
+
+/**
+ * Returns a list of all recipes
+ * @returns {Promise&lt;unknown>}
+ */
+function getAllRecipes(){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM recipes", [], (recipes) => {
+            if(recipes){
+                let o = []
+                let p = []
+
+                for (let i = 0; i &lt; recipes.length; i++) {
+                    const recipe = recipes[i]
+                    p.push(new Promise(async (resolve) => {
+                        o.push(await getRecipe(recipe.recipe_id))
+                        resolve()
+                    }))
+                }
+
+                Promise.all(p).then(() => {
+                    resolve(o)
+                })
+            } else {
+                reject("Error while requesting recipes")
+            }
+        })
+    })
+}
+
+/**
+ * Return a recipe
+ * @param recipe_id
+ * @returns {Promise&lt;unknown>}
+ */
+function getRecipe(recipe_id){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM recipes WHERE recipe_id = ?", [recipe_id], async (recipe) => {
+            if(recipe &amp;&amp; recipe.length > 0){
+                recipe = recipe[0]
+                recipe.type = "recipe"
+                recipe.category = await new Promise((resolve) => {
+                    getRecipeCategory(recipe.recipe_category_id)
+                        .then(resolve)
+                        .catch((err) => {
+                            reject(err)
+                        })
+                });
+                recipe.author = await new Promise((resolve) => {
+                    getUserPublic(recipe.user_id)
+                        .then(resolve)
+                        .catch((err) => {
+                            reject(err)
+                        })
+                });
+                recipe.steps = []
+                recipe.ingredients = []
+
+                await new Promise((resolve) => {
+                    db.select("SELECT * FROM recipe_steps WHERE recipe_id = ?", [recipe_id], async (steps) => {
+                        if(steps &amp;&amp; steps.length > 0){
+                            for (let i = 0; i &lt; steps.length; i++) {
+                                const t = await new Promise((resolve) => {
+                                    getStep(steps[i].step_id)
+                                        .then(resolve)
+                                        .catch((err) => {
+                                            reject(err)
+                                        })
+                                })
+                                recipe.steps.push({
+                                    quantity: steps[i].quantity,
+                                    step: t
+                                })
+
+                                // add quantity times the ingredients
+                                for (let j = 0; j &lt; steps[i].quantity; j++) {
+                                    for (let k = 0; k &lt; t.ingredients.length; k++) {
+                                        recipe.ingredients.push(t.ingredients[k])
+                                    }
+                                }
+                            }
+                        }
+                        resolve()
+                    })
+                })
+                resolve(recipe)
+            } else {
+                reject("Recipe " + recipe_id + " not found")
+            }
+        })
+    })
+}
+
+/**
+ * Add a step to a recipe
+ * @param recipe_id
+ * @param step_id
+ * @param position
+ * @param quantity
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function addStep(recipe_id, step_id, position, quantity){
+    return db.insert("recipe_steps", [
+        {
+            recipe_id: recipe_id,
+            step_id: step_id,
+            position: position,
+            quantity: quantity
+        }
+    ])
+}
+
+/**
+ * Remove a step from a recipe
+ * @param recipe_id
+ * @param step_id
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function removeStep(recipe_id, step_id){
+    return db.run("DELETE FROM recipe_steps WHERE recipe_id = ? AND step_id = ?", [recipe_id, step_id])
+}
+
+module.exports = {
+    getRecipe,
+    getAllRecipes,
+    createRecipe,
+    deleteRecipe,
+    editRecipe,
+    addStep,
+    removeStep
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

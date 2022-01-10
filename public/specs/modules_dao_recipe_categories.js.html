@@ -1,0 +1,208 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> modules/dao/recipe_categories.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="dao.module_allergenes.html">allergenes</a></li><li><a href="dao.module_ingredient_categories.html">ingredient_categories</a></li><li><a href="dao.module_ingredients.html">ingredients</a></li><li><a href="dao.module_recipe_categories.html">recipe_categories</a></li><li><a href="dao.module_recipes.html">recipes</a></li><li><a href="dao.module_session_tokens.html">session_tokens</a></li><li><a href="dao.module_step_components.html">step_components</a></li><li><a href="dao.module_steps.html">steps</a></li><li><a href="dao.module_technical_sheets.html">technical_sheets</a></li><li><a href="dao.module_units.html">units</a></li><li><a href="module-auth.html">auth</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#msToTime">msToTime</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>modules/dao/recipe_categories.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* Provide every functions required to interact with recipe_categories
+* @module dao.recipe_categories
+* */
+
+const db = require("../db");
+
+/**
+ * Change the propertie of a recipe category
+ * @param recipe_category_id
+ * @param arr
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function editRecipeCategory(recipe_category_id, arr){
+    return db.update("recipe_categories", arr, "recipe_category_id = " + recipe_category_id)
+}
+
+/**
+ * Delete a recipe category
+ * @param recipe_category_id
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function deleteRecipeCategory(recipe_category_id){
+    return db.run("DELETE FROM recipe_categories WHERE recipe_category_id = ?", [recipe_category_id])
+}
+
+/**
+ * Create a new recipe category
+ * @param name
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function createRecipeCategory(name){
+    return db.insert("recipe_categories", [
+        {
+            name: name
+        }
+    ])
+}
+
+/**
+ * Returns a list of all recipe categories
+ * @returns {Promise&lt;unknown>}
+ */
+function getAllRecipeCategories(){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM recipe_categories", [], (recipe_categories) => {
+            if(recipe_categories){
+                let o = []
+                let p = []
+
+                for (let i = 0; i &lt; recipe_categories.length; i++) {
+                    const recipe_category = recipe_categories[i]
+                    p.push(new Promise(async (resolve) => {
+                        o.push(await getRecipeCategory(recipe_category.recipe_category_id))
+                        resolve()
+                    }))
+                }
+
+                Promise.all(p).then(() => {
+                    resolve(o)
+                })
+            } else {
+                reject("Error while requesting recipe categories")
+            }
+        })
+    })
+}
+
+/**
+ * Return a recipe category
+ * @param recipe_category_id
+ * @returns {Promise&lt;unknown>}
+ */
+function getRecipeCategory(recipe_category_id){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM recipe_categories WHERE recipe_category_id = ?", [recipe_category_id], (recipe_categories) => {
+            if(recipe_categories &amp;&amp; recipe_categories.length > 0){
+                resolve(recipe_categories[0])
+            } else {
+                reject("Recipe category " + recipe_category_id + " not found")
+            }
+        })
+    })
+}
+
+module.exports = {
+    getRecipeCategory,
+    getAllRecipeCategories,
+    createRecipeCategory,
+    deleteRecipeCategory,
+    editRecipeCategory
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

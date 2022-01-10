@@ -1,0 +1,208 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> modules/dao/allergenes.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="dao.module_allergenes.html">allergenes</a></li><li><a href="dao.module_ingredient_categories.html">ingredient_categories</a></li><li><a href="dao.module_ingredients.html">ingredients</a></li><li><a href="dao.module_recipe_categories.html">recipe_categories</a></li><li><a href="dao.module_recipes.html">recipes</a></li><li><a href="dao.module_session_tokens.html">session_tokens</a></li><li><a href="dao.module_step_components.html">step_components</a></li><li><a href="dao.module_steps.html">steps</a></li><li><a href="dao.module_technical_sheets.html">technical_sheets</a></li><li><a href="dao.module_units.html">units</a></li><li><a href="module-auth.html">auth</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#msToTime">msToTime</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>modules/dao/allergenes.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* Provide every functions required to interact with allergenes
+* @module dao.allergenes
+* */
+
+const db = require("../db");
+
+/**
+ * Edit the database properties of an allergene object
+ * @param {Integer} allergene_id - The id of an allergene
+ * @param {Object} arr - An object with the new values of properties to edit the allergene
+ */
+function editAllergene(allergene_id, arr){
+    return db.update("allergenes", arr, "allergene_id = " + allergene_id)
+}
+
+/**
+ * Delete the specified allergene
+ * @param allergene_id
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function deleteAllergene(allergene_id){
+    return db.run("DELETE FROM allergenes WHERE allergene_id = ?", [allergene_id])
+}
+
+/**
+ * Create an allergene
+ * @param name
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function createAllergene(name){
+    return db.insert("allergenes", [
+        {
+            name: name
+        }
+    ])
+}
+
+/**
+ * Returns the list of all allergenes
+ * @param filter
+ * @returns {Promise&lt;unknown>}
+ */
+function getAllAllergenes(filter = {}){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM allergenes", [], (allergenes) => {
+            if(allergenes){
+                let o = []
+                let p = []
+
+                for (let i = 0; i &lt; allergenes.length; i++) {
+                    const allergene = allergenes[i]
+                    p.push(new Promise(async (resolve) => {
+                        o.push(await getAllergene(allergene.allergene_id))
+                        resolve()
+                    }))
+                }
+
+                Promise.all(p).then(() => {
+                    resolve(o)
+                })
+            } else {
+                reject("Error while requesting allergens")
+            }
+        })
+    })
+}
+
+/**
+ * Returns a list of all allergenes
+ * @param allergene_id
+ * @returns {Promise&lt;unknown>}
+ */
+function getAllergene(allergene_id){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM allergenes WHERE allergene_id = ?", [allergene_id], async (allergenes) => {
+            if(allergenes &amp;&amp; allergenes.length > 0){
+                resolve(allergenes[0])
+            } else {
+                reject("Allergene " + allergene_id + " not found")
+            }
+        })
+    })
+}
+
+module.exports = {
+    getAllergene,
+    getAllAllergenes,
+    createAllergene,
+    deleteAllergene,
+    editAllergene
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

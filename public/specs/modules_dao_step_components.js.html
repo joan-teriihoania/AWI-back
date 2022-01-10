@@ -1,0 +1,229 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> modules/dao/step_components.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="dao.module_allergenes.html">allergenes</a></li><li><a href="dao.module_ingredient_categories.html">ingredient_categories</a></li><li><a href="dao.module_ingredients.html">ingredients</a></li><li><a href="dao.module_recipe_categories.html">recipe_categories</a></li><li><a href="dao.module_recipes.html">recipes</a></li><li><a href="dao.module_session_tokens.html">session_tokens</a></li><li><a href="dao.module_step_components.html">step_components</a></li><li><a href="dao.module_steps.html">steps</a></li><li><a href="dao.module_technical_sheets.html">technical_sheets</a></li><li><a href="dao.module_units.html">units</a></li><li><a href="module-auth.html">auth</a></li><li><a href="module-server.html">server</a></li></ul><h3>Global</h3><ul><li><a href="global.html#msToTime">msToTime</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>modules/dao/step_components.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* Provide every functions required to interact with step components
+* @module dao.step_components
+* */
+
+const db = require('../db')
+const {getRecipe} = require("./recipes");
+const {getIngredient} = require("./ingredients");
+const {getStep} = require("./steps");
+
+/**
+ * Change the propeerties of a step component
+ * @param step_component_id
+ * @param arr
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function editStepComponent(step_component_id, arr){
+    return db.update("step_components", arr, "step_component_id = " + step_component_id)
+}
+
+/**
+ * Delete a step component
+ * @param step_component_id
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function deleteStepComponent(step_component_id){
+    return db.run("DELETE FROM step_components WHERE step_component_id = ?", [step_component_id])
+}
+
+/**
+ * Create a step component
+ * @param step_id
+ * @param quantity
+ * @param sub_step_id
+ * @param sub_recipe_id
+ * @param sub_ingredient_id
+ * @returns {Promise | Promise&lt;unknown>}
+ */
+function createStepComponent(step_id, quantity, sub_step_id, sub_recipe_id, sub_ingredient_id){
+    return db.insert("step_components", [
+        {
+            step_id: step_id,
+            quantity: quantity,
+            sub_step_id: sub_step_id,
+            sub_recipe_id: sub_recipe_id,
+            sub_ingredient_id: sub_ingredient_id
+        }
+    ])
+}
+
+/**
+ * Return a list of all step components
+ * @returns {Promise&lt;unknown>}
+ */
+function getAllStepComponents(){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM step_components", [], (step_components) => {
+            if(step_components){
+                let o = []
+                let p = []
+
+                for (let i = 0; i &lt; step_components.length; i++) {
+                    const step_component = step_components[i]
+                    p.push(new Promise(async (resolve) => {
+                        o.push(await getStepComponent(step_component.step_component_id))
+                        resolve()
+                    }))
+                }
+
+                Promise.all(p).then(() => {
+                    resolve(o)
+                })
+            } else {
+                reject("Error while requesting step components")
+            }
+        })
+    })
+}
+
+/**
+ * Return a step component
+ * @param step_component_id
+ * @returns {Promise&lt;unknown>}
+ */
+function getStepComponent(step_component_id){
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM step_components WHERE step_component_id = ?", [step_component_id], async (step_components) => {
+            if(step_components &amp;&amp; step_components.length > 0){
+                const step_component = step_components[0]
+                if(step_component.sub_step_id){
+                    step_component.component = await getStep(step_component.sub_step_id)
+                } else if(step_component.sub_recipe_id){
+                    step_component.component = await getRecipe(step_component.sub_recipe_id)
+                } else if(step_component.sub_ingredient_id){
+                    step_component.component = await getIngredient(step_component.sub_ingredient_id)
+                } else {
+                    reject("Recipe step component "+ step_component_id +" does not have a sub element")
+                }
+                resolve(step_component)
+            } else {
+                reject("Step component " + step_component_id + " not found")
+            }
+        })
+    })
+}
+
+module.exports = {
+    getStepComponent,
+    getAllStepComponents,
+    createStepComponent,
+    deleteStepComponent,
+    editStepComponent
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>
