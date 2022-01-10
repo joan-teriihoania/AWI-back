@@ -10,7 +10,7 @@ module.exports = {
                     if(user.username == decodeURIComponent(req.params.username)){
                         deleteAccount(res.user.user_id).then(() => {
                             res.status(200)
-                            res.end()
+                            res.send({})
                         }).catch(() => {
                             res.status(500)
                             res.end()

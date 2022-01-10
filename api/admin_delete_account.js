@@ -8,7 +8,7 @@ module.exports = {
                 const user = users[0]
                 deleteAccount(user.user_id).then(() => {
                     res.status(200)
-                    res.end()
+                    res.send({})
                 }).catch(() => {
                     res.status(500)
                     res.end()
