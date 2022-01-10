@@ -1,5 +1,4 @@
 const db = require("../modules/db");
-const { assign_groups } = require("../modules/load_icals");
 const { deleteAccount } = require("../modules/users");
 
 module.exports = {
