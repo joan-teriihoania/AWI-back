@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Cuisinedu",
-    "description": "This is a sample API documentation for **cuisinedu**. Please be aware that some paths require to be logged in and some are admin-locked. See the project documentation for more informations of how to acquire an (admin) account. **Only HTTPS schemes are accepted. Any HTTP request will be redirect to a secure one when received by the server.**",
+    "description": "This is a sample API documentation for **cuisinedu**. Please be aware that some paths require to be logged in and some are admin-locked. See the project documentation for more informations of how to acquire an (admin) account. **Only HTTPS schemes are accepted. Any HTTP request will be redirect to a secure one when received by the server.** [Find the API module specification here](/specs)",
     "version": "1.0.0"
   },
   "externalDocs": {
