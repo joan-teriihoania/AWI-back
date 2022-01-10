@@ -1,13 +1,34 @@
+/**
+* Provide every functions required to interact with recipe_categories
+* @module dao.recipe_categories
+* */
+
 const db = require("../db");
 
+/**
+ * Change the propertie of a recipe category
+ * @param recipe_category_id
+ * @param arr
+ * @returns {Promise | Promise<unknown>}
+ */
 function editRecipeCategory(recipe_category_id, arr){
     return db.update("recipe_categories", arr, "recipe_category_id = " + recipe_category_id)
 }
 
+/**
+ * Delete a recipe category
+ * @param recipe_category_id
+ * @returns {Promise | Promise<unknown>}
+ */
 function deleteRecipeCategory(recipe_category_id){
     return db.run("DELETE FROM recipe_categories WHERE recipe_category_id = ?", [recipe_category_id])
 }
 
+/**
+ * Create a new recipe category
+ * @param name
+ * @returns {Promise | Promise<unknown>}
+ */
 function createRecipeCategory(name){
     return db.insert("recipe_categories", [
         {
@@ -16,6 +37,10 @@ function createRecipeCategory(name){
     ])
 }
 
+/**
+ * Returns a list of all recipe categories
+ * @returns {Promise<unknown>}
+ */
 function getAllRecipeCategories(){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM recipe_categories", [], (recipe_categories) => {
@@ -41,6 +66,11 @@ function getAllRecipeCategories(){
     })
 }
 
+/**
+ * Return a recipe category
+ * @param recipe_category_id
+ * @returns {Promise<unknown>}
+ */
 function getRecipeCategory(recipe_category_id){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM recipe_categories WHERE recipe_category_id = ?", [recipe_category_id], (recipe_categories) => {

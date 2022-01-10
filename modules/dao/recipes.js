@@ -1,12 +1,28 @@
+/**
+* Provide every functions required to interact with recipes
+* @module dao.recipes
+* */
+
 const db = require('../db')
 const {getRecipeCategory} = require("./recipe_categories");
 const {getUserInfo, getUserPublic} = require("../users");
 const {getStep} = require("./steps");
 
+/**
+ * Change the propertie of a recipe
+ * @param recipe_id
+ * @param arr
+ * @returns {Promise | Promise<unknown>}
+ */
 function editRecipe(recipe_id, arr){
     return db.update("recipes", arr, "recipe_id = " + recipe_id)
 }
 
+/**
+ * Delete a recipe
+ * @param recipe_id
+ * @returns {Promise<unknown[]>}
+ */
 function deleteRecipe(recipe_id){
     return Promise.all([
         db.run("DELETE FROM technical_sheets WHERE recipe_id = ?", [recipe_id]),
@@ -15,6 +31,14 @@ function deleteRecipe(recipe_id){
     ])
 }
 
+/**
+ * Create a recipe
+ * @param name
+ * @param nb_couvert
+ * @param user_id
+ * @param recipe_category_id
+ * @returns {Promise | Promise<unknown>}
+ */
 function createRecipe(name, nb_couvert, user_id, recipe_category_id){
     return db.insert("recipes", [
         {
@@ -26,7 +50,10 @@ function createRecipe(name, nb_couvert, user_id, recipe_category_id){
     ])
 }
 
-
+/**
+ * Returns a list of all recipes
+ * @returns {Promise<unknown>}
+ */
 function getAllRecipes(){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM recipes", [], (recipes) => {
@@ -52,6 +79,11 @@ function getAllRecipes(){
     })
 }
 
+/**
+ * Return a recipe
+ * @param recipe_id
+ * @returns {Promise<unknown>}
+ */
 function getRecipe(recipe_id){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM recipes WHERE recipe_id = ?", [recipe_id], async (recipe) => {
@@ -110,6 +142,14 @@ function getRecipe(recipe_id){
     })
 }
 
+/**
+ * Add a step to a recipe
+ * @param recipe_id
+ * @param step_id
+ * @param position
+ * @param quantity
+ * @returns {Promise | Promise<unknown>}
+ */
 function addStep(recipe_id, step_id, position, quantity){
     return db.insert("recipe_steps", [
         {
@@ -121,6 +161,12 @@ function addStep(recipe_id, step_id, position, quantity){
     ])
 }
 
+/**
+ * Remove a step from a recipe
+ * @param recipe_id
+ * @param step_id
+ * @returns {Promise | Promise<unknown>}
+ */
 function removeStep(recipe_id, step_id){
     return db.run("DELETE FROM recipe_steps WHERE recipe_id = ? AND step_id = ?", [recipe_id, step_id])
 }

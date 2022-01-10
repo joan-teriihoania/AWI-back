@@ -1,3 +1,8 @@
+/**
+* Module managing authentification and control of request authorization
+* @module auth
+* */
+
 const db = require('./db')
 const {decrypt} = require("./crypto");
 

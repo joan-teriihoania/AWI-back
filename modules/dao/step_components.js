@@ -1,16 +1,41 @@
+/**
+* Provide every functions required to interact with step components
+* @module dao.step_components
+* */
+
 const db = require('../db')
 const {getRecipe} = require("./recipes");
 const {getIngredient} = require("./ingredients");
 const {getStep} = require("./steps");
 
+/**
+ * Change the propeerties of a step component
+ * @param step_component_id
+ * @param arr
+ * @returns {Promise | Promise<unknown>}
+ */
 function editStepComponent(step_component_id, arr){
     return db.update("step_components", arr, "step_component_id = " + step_component_id)
 }
 
+/**
+ * Delete a step component
+ * @param step_component_id
+ * @returns {Promise | Promise<unknown>}
+ */
 function deleteStepComponent(step_component_id){
     return db.run("DELETE FROM step_components WHERE step_component_id = ?", [step_component_id])
 }
 
+/**
+ * Create a step component
+ * @param step_id
+ * @param quantity
+ * @param sub_step_id
+ * @param sub_recipe_id
+ * @param sub_ingredient_id
+ * @returns {Promise | Promise<unknown>}
+ */
 function createStepComponent(step_id, quantity, sub_step_id, sub_recipe_id, sub_ingredient_id){
     return db.insert("step_components", [
         {
@@ -23,7 +48,10 @@ function createStepComponent(step_id, quantity, sub_step_id, sub_recipe_id, sub_
     ])
 }
 
-
+/**
+ * Return a list of all step components
+ * @returns {Promise<unknown>}
+ */
 function getAllStepComponents(){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM step_components", [], (step_components) => {
@@ -49,6 +77,11 @@ function getAllStepComponents(){
     })
 }
 
+/**
+ * Return a step component
+ * @param step_component_id
+ * @returns {Promise<unknown>}
+ */
 function getStepComponent(step_component_id){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM step_components WHERE step_component_id = ?", [step_component_id], async (step_components) => {

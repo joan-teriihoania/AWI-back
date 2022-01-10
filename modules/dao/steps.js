@@ -1,14 +1,37 @@
+/**
+* Provide every functions required to interact with steps
+* @module dao.steps
+* */
+
 const db = require('../db')
 const {getStepComponent} = require("./step_components");
 
+/**
+ * Change the properties of a step
+ * @param step_id
+ * @param arr
+ * @returns {Promise | Promise<unknown>}
+ */
 function editStep(step_id, arr){
     return db.update("steps", arr, "step_id = " + step_id)
 }
 
+/**
+ * Delete a step
+ * @param step_id
+ * @returns {Promise | Promise<unknown>}
+ */
 function deleteStep(step_id){
     return db.run("DELETE FROM steps WHERE step_id = ?", [step_id])
 }
 
+/**
+ * Create a step
+ * @param name
+ * @param description
+ * @param duration
+ * @returns {Promise | Promise<unknown>}
+ */
 function createStep(name, description, duration){
     return db.insert("steps", [
         {
@@ -19,6 +42,10 @@ function createStep(name, description, duration){
     ])
 }
 
+/**
+ * Return a list of all steps
+ * @returns {Promise<unknown>}
+ */
 function getAllSteps(){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM steps", [], (steps) => {
@@ -44,6 +71,11 @@ function getAllSteps(){
     })
 }
 
+/**
+ * Return a step
+ * @param step_id
+ * @returns {Promise<unknown>}
+ */
 function getStep(step_id){
     return new Promise((resolve, reject) => {
         db.select("SELECT * FROM steps WHERE step_id = ?", [step_id], async (steps) => {
