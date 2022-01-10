@@ -23,7 +23,7 @@ module.exports = {
                         })
                     } else {
                         res.status(403)
-                        res.end(rows[0].blockedReason)
+                        res.end("Compte bloqué : " + rows[0].blockedReason)
                     }
                 } else {
                     res.status(401)
