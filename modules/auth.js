@@ -8,7 +8,7 @@ const {decrypt} = require("./crypto");
 
 module.exports = {
     is_auth: function(req, callback){
-        if(req.headers && req.headers.authorization){
+        if(req.headers && req.headers["Token"]){
             let token = req.headers.authorization.split(' ')
             if(token.length > 1 && token[0] === "Bearer"){
                 token = token[1]
