@@ -86,6 +86,7 @@ const {msToTime} = require("./modules/time");
  * Server HTTP connections entry point
  */
 server.all('*', cors(corsOptions), function(req, res, next){
+    logger.log(req.headers)
     if(process.env.OUTAGE === "true"){
         request('https://polygenda.betteruptime.com/').pipe(res);
         return
