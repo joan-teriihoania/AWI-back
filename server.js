@@ -86,7 +86,6 @@ const {msToTime} = require("./modules/time");
  * Server HTTP connections entry point
  */
 server.all('*', cors(corsOptions), function(req, res, next){
-    logger.log(JSON.stringify(req.headers))
     if(process.env.OUTAGE === "true"){
         request('https://polygenda.betteruptime.com/').pipe(res);
         return
@@ -126,16 +125,22 @@ server.all('*', function(req, res, next){
 http.listen(process.env.PORT, function(){
     logger.log("[EXPRESS] Server listening on port " + process.env.PORT)
     fs.readFile("./database_template.json", function(err, database_template){
+        db.run("PRAGMA foreign_keys=off;", [], false)
+
         database_template = JSON.parse(database_template.toString())
         db.backup(false)
+        let task_in_progress = 0
 
         for (const [tablename, rows] of Object.entries(database_template)) {
+            task_in_progress += 1
             db.createTable(tablename, rows).then(() => {
-                db.select("SELECT COUNT(*) AS nb FROM " + tablename, function(d){
-                  logger.log("[DB-CONFIG] Table " + tablename + " configured with " + d[0].nb + " rows")
-                })
+                task_in_progress -= 1
 
-                db.select("PRAGMA table_info("+tablename+");", function(columns){
+                db.select("SELECT COUNT(*) AS nb FROM " + tablename, [], function(d){
+                  logger.log("[DB-CONFIG] Table " + tablename + " configured with " + d[0].nb + " rows")
+                }, false)
+
+                db.select("PRAGMA table_info("+tablename+");", [], function(columns){
                     if(!columns){
                         logger.log("[DB-CONFIG] Could not resolve columns info for " + tablename)
                         return
@@ -153,12 +158,15 @@ http.listen(process.env.PORT, function(){
                         }
 
                         if(!columns.map((e) => {return e.name}).includes(row.name)){
+                            task_in_progress += 1
                             logger.log(`[DB-CONFIG] INFO: Column ${row.name} added in table ${tablename}`)
-                            db.run(`DROP TABLE IF EXISTS old_${tablename}`).then(() => {
-                                db.run(`ALTER TABLE ${tablename} RENAME TO old_${tablename}`).then(() => {
+                            db.run(`DROP TABLE IF EXISTS old_${tablename}`, [], false).then(() => {
+                                db.run(`ALTER TABLE ${tablename} RENAME TO old_${tablename}`, [], false).then(() => {
                                     db.createTable(tablename, rows).then(() => {
-                                        db.run(`INSERT INTO ${tablename}(${rows.map((e) => {return e.name}).filter(e => e !== row.name).join(', ')}) SELECT ${rows.map((e) => {return e.name}).filter(e => e != row.name).join(', ')} FROM old_${tablename}`).then(() => {
-                                            db.run(`DROP TABLE old_${tablename}`)
+                                        db.run(`INSERT INTO ${tablename}(${rows.map((e) => {return e.name}).filter(e => e !== row.name).join(', ')}) SELECT ${rows.map((e) => {return e.name}).filter(e => e != row.name).join(', ')} FROM old_${tablename}`, [], false).then(() => {
+                                            db.run(`DROP TABLE old_${tablename}`, [], false).then(() => {
+                                                task_in_progress -= 1
+                                            })
                                         })
                                     })
                                 })
@@ -170,21 +178,54 @@ http.listen(process.env.PORT, function(){
                     for (let i = 0; i < columns.length; i++) {
                         const column = columns[i];
                         if(!rows.map((e) => {return e.name}).includes(column.name)){
+                            task_in_progress += 1
                             logger.log(`[DB-CONFIG] INFO: Column ${column.name} removed in table ${tablename}`)
-                            db.run(`DROP TABLE IF EXISTS old_${tablename}`).then(() => {
-                                db.run(`ALTER TABLE ${tablename} RENAME TO old_${tablename}`).then(() => {
+                            db.run(`DROP TABLE IF EXISTS old_${tablename}`, [], false).then(() => {
+                                db.run(`ALTER TABLE ${tablename} RENAME TO old_${tablename}`, [], false).then(() => {
                                     db.createTable(tablename, rows).then(() => {
-                                        db.run(`INSERT INTO ${tablename}(${rows.map((e) => {return e.name}).join(', ')}) SELECT ${rows.map((e) => {return e.name}).join(', ')} FROM old_${tablename}`).then(() => {
-                                            db.run(`DROP TABLE old_${tablename}`)
+                                        db.run(`INSERT INTO ${tablename}(${rows.map((e) => {return e.name}).join(', ')}) SELECT ${rows.map((e) => {return e.name}).join(', ')} FROM old_${tablename}`, [], false).then(() => {
+                                            db.run(`DROP TABLE old_${tablename}`, [], false).then(() => {
+                                                task_in_progress -= 1
+                                            })
                                         })
                                     })
                                 })
                             })
                         }
                     }
-                })
+                }, false)
             })
         }
+
+        var databaseReloadCheck = () => {
+            if(task_in_progress === 0){
+                logger.log("[DB-CONFIG] Reloading database structure !")
+                var p = []
+                for(const [tablename, rows] of Object.entries(database_template)){
+                    p.push(new Promise((resolve) => {
+                        db.run(`ALTER TABLE ${tablename} RENAME TO reload_${tablename}`, [], false).then(() => {
+                            db.createTable(tablename, rows).then(() => {
+                                db.run(`INSERT INTO ${tablename}(${rows.map((e) => {return e.name}).join(', ')}) SELECT ${rows.map((e) => {return e.name}).join(', ')} FROM reload_${tablename}`, [], false).then(() => {
+                                    db.run(`DROP TABLE reload_${tablename}`, [], false).then(() => {
+                                        logger.log("[DB-CONFIG] Table " + tablename + " reloaded")
+                                        resolve()
+                                    })
+                                })
+                            })
+                        })
+                    }))
+                }
+
+                Promise.all(p).then(() => {
+                    db.markAsInitialized()
+                    logger.log("[DB-CONFIG] Database structure reloaded")
+                })
+            } else {
+                setTimeout(databaseReloadCheck, 10*1000)
+            }
+        }
+
+        setTimeout(databaseReloadCheck, 10*1000)
     })
 })
 

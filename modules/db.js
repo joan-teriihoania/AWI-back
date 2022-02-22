@@ -10,6 +10,7 @@ if(!fs.existsSync(".data")){
 
 const sqlite3 = require('sqlite3');
 var database = new sqlite3.Database('.data/database.sqlite3')
+var initialized = false
 const logger = require('./logger');
 const {toFRDatetimeString} = require("./time");
 
@@ -142,10 +143,13 @@ function isNumber(num){
              });
          })
      },
-     insert: function(tablename, rows) {
+     insert: function(tablename, rows, waitForInit = true) {
          var lastID
          
-         return new Promise(function(resolve, reject){
+         return new Promise(async function(resolve, reject){
+             if(waitForInit){
+                 while(!initialized){ await new Promise((resolve) => {setTimeout(resolve, 1000)}) }
+             }
              var sql_values = []
              var all_values = []
              var cols = []
@@ -176,8 +180,12 @@ function isNumber(num){
             })
          })
      },
-     update: function(tablename, row, where = "1") {       
-         return new Promise(function(resolve, reject){
+     update: function(tablename, row, where = "1", waitForInit = true) {
+         return new Promise(async function(resolve, reject){
+             if(waitForInit){
+                 while(!initialized){ await new Promise((resolve) => {setTimeout(resolve, 1000)}) }
+             }
+
              var sets = []
              var values = []
              
@@ -212,8 +220,12 @@ function isNumber(num){
              })      
          })
      },
-     run: function(request, params = []){
-         return new Promise(function(resolve, reject){
+     run: function(request, params = [], waitForInit = true){
+         return new Promise(async function(resolve, reject){
+             if(waitForInit){
+                 while(!initialized){ await new Promise((resolve) => {setTimeout(resolve, 1000)}) }
+             }
+
              database.run(request, params, function(err){
                  if(err){
                      if(err.code == 'SQLITE_IOERR' || err.code == 'SQLITE_BUSY'){
@@ -235,10 +247,18 @@ function isNumber(num){
              })
          })
      },
-     selectAll: function(tablename, callback) {
+     selectAll: async function(tablename, callback, waitForInit = true) {
+         if(waitForInit){
+             while(!initialized){ await new Promise((resolve) => {setTimeout(resolve, 1000)}) }
+         }
+
          module.exports.select("SELECT * FROM " + tablename, [], callback)
      },
-     select: function(request, params, callback) {
+     select: async function(request, params, callback, waitForInit = true) {
+         if(waitForInit){
+             while(!initialized){ await new Promise((resolve) => {setTimeout(resolve, 1000)}) }
+         }
+
          if(!Array.isArray(params)){
              callback = params
              params = []
@@ -265,5 +285,11 @@ function isNumber(num){
      },
      closeDB: function() {
          database.close();
+     },
+     markAsInitialized: function(){
+         module.exports.run("PRAGMA foreign_keys=on;")
+         initialized = true
+         logger.log("[DB-CONFIG] Database initialized")
+         logger.log("[DB-CONFIG] Foreign key constraints enabled")
      }
  }
