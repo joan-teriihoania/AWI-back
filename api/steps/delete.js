@@ -9,7 +9,11 @@ module.exports = {
             res.send({})
         }).catch((err) => {
             res.status(500)
-            res.send(err)
+            if(err.code && err.code === "SQLITE_CONSTRAINT"){
+                res.send("Cette étape ne peut pas être supprimée car elle est utilisée dans d'autres éléments (étapes, recettes, etc).")
+            } else {
+                res.send(err)
+            }
         })
     }
 }

@@ -6,7 +6,11 @@ module.exports = {
             res.send({})
         }).catch((err) => {
             res.status(500)
-            res.send(err)
+            if(err.code && err.code === "SQLITE_CONSTRAINT"){
+                res.send("Cet allergène ne peut pas être supprimé car il est utilisé par un ou plusieurs ingrédients.")
+            } else {
+                res.send(err)
+            }
         })
     }
 }

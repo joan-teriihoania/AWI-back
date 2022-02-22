@@ -11,7 +11,11 @@ module.exports = {
             res.send({})
         }).catch((err) => {
             res.status(500)
-            res.send(err)
+            if(err.code && err.code === "SQLITE_CONSTRAINT"){
+                res.send("Cette catégorie ne peut pas être supprimée car elle est utilisée par une ou plusieurs recettes.")
+            } else {
+                res.send(err)
+            }
         })
     }
 }
