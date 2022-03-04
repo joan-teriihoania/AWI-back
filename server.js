@@ -1,6 +1,6 @@
 /**
  * This is the main module initializing the process and overseeing the execution.
- * It manages the HTTP and WebSocket connections and dispatch them to their proper controllers.
+ * It manages the HTTP and WebSocket connections and dispatch them to their proper controllers..
  * It also loads in the routing logic as well as managing the rendering process
  * @module server
  */
