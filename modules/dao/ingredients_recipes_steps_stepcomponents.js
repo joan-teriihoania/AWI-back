@@ -302,6 +302,17 @@ function addStep(recipe_id, step_id, position, quantity){
     ])
 }
 
+function editRecipeStep(recipe_id, step_id, previousPosition, position, quantity){
+    return db.update("recipe_steps", {
+        position: position,
+        quantity: quantity
+    }, "step_id = " + step_id + " AND recipe_id = " + recipe_id + " AND position = " + previousPosition)
+}
+
+function getRecipeStep(recipe_id, step_id){
+    return db.select("SELECT * FROM recipe_steps WHERE recipe_id = ? AND step_id = ?", [recipe_id, step_id])
+}
+
 /**
  * Remove a step from a recipe
  * @param recipe_id
@@ -551,7 +562,8 @@ module.exports.deleteRecipe = deleteRecipe
 module.exports.editRecipe = editRecipe
 module.exports.addStep = addStep
 module.exports.removeStep = removeStep
-
+module.exports.getRecipeStep = getRecipeStep
+module.exports.editRecipeStep = editRecipeStep
 
 module.exports.getStepComponent = getStepComponent
 module.exports.getAllStepComponents = getAllStepComponents

@@ -300,6 +300,17 @@
 			}
 		},
 		"PUT": {
+			"/recipes/:recipe_id/steps/:step_id": {
+				"filename": "recipes/editStep",
+				"login": true,
+				"admin": true,
+				"description": "Modifier une étape de recette",
+				"params": ["position", "quantity"],
+				"return": {
+					"success": "JSON",
+					"error": "String"
+				}
+			},
 			"/account/login": {
 				"filename": "login.js",
 				"login": false,
