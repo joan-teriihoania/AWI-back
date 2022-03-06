@@ -1,5 +1,5 @@
 const {getAllergene, getAllAllergenes} = require("../../modules/dao/allergenes");
-const {getAllStepComponents} = require("../../modules/dao/step_components");
+const {getAllStepComponents} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 
 
 module.exports = {

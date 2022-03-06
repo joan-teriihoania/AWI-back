@@ -1,8 +1,8 @@
-const {getRecipe} = require("../../modules/dao/recipes");
-const {getIngredient} = require("../../modules/dao/ingredients");
+const {getRecipe} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
+const {getIngredient} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 const {getUnit} = require("../../modules/dao/units");
-const {getStep} = require("../../modules/dao/steps");
-const {getStepComponent} = require("../../modules/dao/step_components");
+const {getStep} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
+const {getStepComponent} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 const {getTechnicalSheet} = require("../../modules/dao/technical_sheets");
 
 

@@ -1,5 +1,5 @@
 const {createAllergene, getAllergene, deleteAllergene} = require("../../modules/dao/allergenes");
-const {deleteRecipe} = require("../../modules/dao/recipes");
+const {deleteRecipe} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 
 module.exports = {
     exec: function(req, res){

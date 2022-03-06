@@ -1,4 +1,4 @@
-const {getRecipe} = require("../../modules/dao/recipes");
+const {getRecipe} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 
 
 module.exports = {

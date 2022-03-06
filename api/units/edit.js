@@ -1,5 +1,5 @@
 const {createAllergene, getAllergene, editAllergene} = require("../../modules/dao/allergenes");
-const {editIngredient, getIngredient} = require("../../modules/dao/ingredients");
+const {editIngredient, getIngredient} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 const {editTechnicalSheet, getTechnicalSheet} = require("../../modules/dao/technical_sheets");
 const {editUnit, getUnit} = require("../../modules/dao/units");
 

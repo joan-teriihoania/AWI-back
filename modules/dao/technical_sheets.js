@@ -4,7 +4,7 @@
 * */
 
 const db = require("../db");
-const {getRecipe} = require("./recipes");
+const {getRecipe} = require("./ingredients_recipes_steps_stepcomponents");
 
 /**
  * Change the properties of a technical sheet

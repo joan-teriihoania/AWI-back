@@ -1,7 +1,7 @@
-const {createRecipe, getRecipe} = require("../../modules/dao/recipes");
-const {createIngredient, getIngredient} = require("../../modules/dao/ingredients");
+const {createRecipe, getRecipe} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
+const {createIngredient, getIngredient} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 const {createUnit, getUnit} = require("../../modules/dao/units");
-const {createStep, getStep} = require("../../modules/dao/steps");
+const {createStep, getStep} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 const {createIngredientCategory, getIngredientCategory} = require("../../modules/dao/ingredient_categories");
 const {createRecipeCategory, getRecipeCategory} = require("../../modules/dao/recipe_categories");
 

@@ -1,6 +1,6 @@
 const {createAllergene, getAllergene, editAllergene} = require("../../modules/dao/allergenes");
-const {editIngredient, getIngredient} = require("../../modules/dao/ingredients");
-const {editStep, getStep} = require("../../modules/dao/steps");
+const {editIngredient, getIngredient} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
+const {editStep, getStep} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 
 module.exports = {
     exec: function(req, res){

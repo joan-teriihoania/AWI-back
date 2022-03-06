@@ -1,7 +1,7 @@
 const {createAllergene, getAllergene, deleteAllergene} = require("../../modules/dao/allergenes");
-const {deleteIngredient} = require("../../modules/dao/ingredients");
+const {deleteIngredient} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 const {deleteUnit} = require("../../modules/dao/units");
-const {deleteStep} = require("../../modules/dao/steps");
+const {deleteStep} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 const {deleteIngredientCategory} = require("../../modules/dao/ingredient_categories");
 
 module.exports = {

@@ -1,4 +1,4 @@
-const {createRecipe, getRecipe} = require("../../modules/dao/recipes");
+const {createRecipe, getRecipe} = require("../../modules/dao/ingredients_recipes_steps_stepcomponents");
 
 module.exports = {
     exec: function(req, res){
