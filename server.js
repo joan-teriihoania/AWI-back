@@ -203,12 +203,14 @@ http.listen(process.env.PORT, function(){
                 var p = []
                 for(const [tablename, rows] of Object.entries(database_template)){
                     p.push(new Promise((resolve) => {
-                        db.run(`ALTER TABLE ${tablename} RENAME TO reload_${tablename}`, [], false).then(() => {
-                            db.createTable(tablename, rows).then(() => {
-                                db.run(`INSERT INTO ${tablename}(${rows.map((e) => {return e.name}).join(', ')}) SELECT ${rows.map((e) => {return e.name}).join(', ')} FROM reload_${tablename}`, [], false).then(() => {
-                                    db.run(`DROP TABLE reload_${tablename}`, [], false).then(() => {
-                                        logger.log("[DB-CONFIG] Table " + tablename + " reloaded")
-                                        resolve()
+                        db.run(`DROP TABLE IF EXISTS reload_${tablename}`, [], false).then(() => {
+                            db.run(`ALTER TABLE ${tablename} RENAME TO reload_${tablename}`, [], false).then(() => {
+                                db.createTable(tablename, rows).then(() => {
+                                    db.run(`INSERT INTO ${tablename}(${rows.map((e) => {return e.name}).join(', ')}) SELECT ${rows.map((e) => {return e.name}).join(', ')} FROM reload_${tablename}`, [], false).then(() => {
+                                        db.run(`DROP TABLE reload_${tablename}`, [], false).then(() => {
+                                            logger.log("[DB-CONFIG] Table " + tablename + " reloaded")
+                                            resolve()
+                                        })
                                     })
                                 })
                             })
