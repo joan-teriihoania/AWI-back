@@ -310,7 +310,15 @@ function editRecipeStep(recipe_id, step_id, previousPosition, position, quantity
 }
 
 function getRecipeStep(recipe_id, step_id){
-    return db.select("SELECT * FROM recipe_steps WHERE recipe_id = ? AND step_id = ?", [recipe_id, step_id])
+    return new Promise((resolve, reject) => {
+        db.select("SELECT * FROM recipe_steps WHERE recipe_id = ? AND step_id = ?", [recipe_id, step_id], (recipe_step) => {
+            if(recipe_step && recipe_step.length > 0){
+                resolve(recipe_step[0])
+            } else {
+                reject("Error while requesting recipe step")
+            }
+        })
+    })
 }
 
 /**
