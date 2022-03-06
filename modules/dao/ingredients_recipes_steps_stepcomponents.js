@@ -249,7 +249,7 @@ function getRecipe(recipe_id){
                 recipe.ingredients = []
 
                 await new Promise((resolve) => {
-                    db.select("SELECT * FROM recipe_steps WHERE recipe_id = ?", [recipe_id], async (steps) => {
+                    db.select("SELECT * FROM recipe_steps WHERE recipe_id = ? ORDER BY position ASC", [recipe_id], async (steps) => {
                         if(steps && steps.length > 0){
                             for (let i = 0; i < steps.length; i++) {
                                 const t = await new Promise((resolve) => {
