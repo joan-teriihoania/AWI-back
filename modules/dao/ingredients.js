@@ -140,12 +140,10 @@ function removeAllergene(ingredient_id, allergene_id){
     return db.run("DELETE FROM ingredient_allergenes WHERE ingredient_id = ? AND allergene_id = ?", [ingredient_id, allergene_id])
 }
 
-module.exports = {
-    getIngredient,
-    getAllIngredients,
-    createIngredient,
-    deleteIngredient,
-    editIngredient,
-    addAllergene,
-    removeAllergene
-}
+module.exports.getIngredient = getIngredient
+module.exports.getAllIngredients = getAllIngredients
+module.exports.createIngredient = createIngredient
+module.exports.deleteIngredient = deleteIngredient
+module.exports.editIngredient = editIngredient
+module.exports.addAllergene = addAllergene
+module.exports.removeAllergene = removeAllergene

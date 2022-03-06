@@ -104,10 +104,8 @@ function getStepComponent(step_component_id){
     })
 }
 
-module.exports = {
-    getStepComponent,
-    getAllStepComponents,
-    createStepComponent,
-    deleteStepComponent,
-    editStepComponent
-}
+module.exports.getStepComponent = getStepComponent
+module.exports.getAllStepComponents = getAllStepComponents
+module.exports.createStepComponent = createStepComponent
+module.exports.deleteStepComponent = deleteStepComponent
+module.exports.editStepComponent = editStepComponent

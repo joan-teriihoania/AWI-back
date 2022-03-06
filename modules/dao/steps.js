@@ -116,10 +116,8 @@ function getStep(step_id){
     })
 }
 
-module.exports = {
-    getStep,
-    getAllSteps,
-    createStep,
-    deleteStep,
-    editStep
-}
+module.exports.getStep = getStep
+module.exports.getAllSteps = getAllSteps
+module.exports.createStep = createStep
+module.exports.deleteStep = deleteStep
+module.exports.editStep = editStep

@@ -171,12 +171,10 @@ function removeStep(recipe_id, step_id){
     return db.run("DELETE FROM recipe_steps WHERE recipe_id = ? AND step_id = ?", [recipe_id, step_id])
 }
 
-module.exports = {
-    getRecipe,
-    getAllRecipes,
-    createRecipe,
-    deleteRecipe,
-    editRecipe,
-    addStep,
-    removeStep
-}
+module.exports.getRecipe = getRecipe
+module.exports.getAllRecipes = getAllRecipes
+module.exports.createRecipe = createRecipe
+module.exports.deleteRecipe = deleteRecipe
+module.exports.editRecipe = editRecipe
+module.exports.addStep = addStep
+module.exports.removeStep = removeStep
